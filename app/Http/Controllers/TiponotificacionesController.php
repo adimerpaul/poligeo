@@ -14,7 +14,7 @@ class TiponotificacionesController extends Controller
      */
     public function index()
     {
-        //
+        return tiponotificaciones::all();
     }
 
     /**
@@ -35,7 +35,11 @@ class TiponotificacionesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $tipo=new  tiponotificaciones;
+        $tipo->nombre=$request->nombre;
+        $tipo->color=$request->color;
+        $tipo->save();
+        echo $tipo;
     }
 
     /**
@@ -46,7 +50,7 @@ class TiponotificacionesController extends Controller
      */
     public function show(tiponotificaciones $tiponotificaciones)
     {
-        //
+
     }
 
     /**
@@ -67,9 +71,13 @@ class TiponotificacionesController extends Controller
      * @param  \App\tiponotificaciones  $tiponotificaciones
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, tiponotificaciones $tiponotificaciones)
+    public function update(Request $request, $id)
     {
-        //
+        $tipo=tiponotificaciones::find($id);
+        $tipo->nombre=$request->nombre;
+        $tipo->color=$request->color;
+        $tipo->save();
+        echo "1";
     }
 
     /**
@@ -78,8 +86,8 @@ class TiponotificacionesController extends Controller
      * @param  \App\tiponotificaciones  $tiponotificaciones
      * @return \Illuminate\Http\Response
      */
-    public function destroy(tiponotificaciones $tiponotificaciones)
+    public function destroy($id)
     {
-        //
+        return tiponotificaciones::find($id)->delete();
     }
 }

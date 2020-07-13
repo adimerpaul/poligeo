@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SubcategoriaSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(TiponotificacionesSeeder::class);
+        $this->call(NotificacionesSeeder::class);
     }
 }

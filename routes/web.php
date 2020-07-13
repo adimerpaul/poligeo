@@ -27,3 +27,5 @@ Route::resource('/user', 'UserController')->middleware('auth');
 Route::post('/userkey/{user}', 'UserController@userkey')->middleware('auth');
 Route::resource('/categoria', 'CategoriaController')->middleware('auth');
 Route::resource('/subcategoria', 'SubcategoriaController')->middleware('auth');
+Route::apiResource('/tiponotificaciones', 'TiponotificacionesController')->middleware('auth');
+Route::apiResource('/notificaciones', 'NotificacionesController')->middleware('auth');

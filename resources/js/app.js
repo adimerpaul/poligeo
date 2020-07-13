@@ -25,7 +25,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 Vue.component('user-component', require('./components/UserComponent').default);
 Vue.component('tiponotificacion', require('./components/TiponotificacionComponent').default);
 Vue.component('notificacion', require('./components/NotificacionComponent').default);
-
+import $ from 'jquery';
 const app = new Vue({
     el: '#app',
     mounted() {

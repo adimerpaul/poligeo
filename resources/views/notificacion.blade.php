@@ -1,6 +1,6 @@
 @extends('layouts.header')
 @section('content')
     <!-- page content -->
-    <user-component></user-component>
+    <notificacion></notificacion>
     <!-- /page content -->
 @endsection

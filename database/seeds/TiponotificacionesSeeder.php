@@ -11,9 +11,9 @@ class TiponotificacionesSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('tiponotificaciones')->insert(['nombre' => 'exito','color'=>'#2E7D32']);
-        DB::table('tiponotificaciones')->insert(['nombre' => 'peligro','color'=>'#C62828']);
-        DB::table('tiponotificaciones')->insert(['nombre' => 'alert','color'=>'#FFD740']);
-        DB::table('tiponotificaciones')->insert(['nombre' => 'informacion','color'=>'#1565C0']);
+        DB::table('tiponotificaciones')->insert(['nombre' => 'Exito','color'=>'#2E7D32']);
+        DB::table('tiponotificaciones')->insert(['nombre' => 'Peligro','color'=>'#C62828']);
+        DB::table('tiponotificaciones')->insert(['nombre' => 'Alert','color'=>'#FFD740']);
+        DB::table('tiponotificaciones')->insert(['nombre' => 'Información','color'=>'#1565C0']);
     }
 }
