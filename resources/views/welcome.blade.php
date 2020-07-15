@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Gentelella Alela! | </title>
+    <title>Poli geo! | </title>
 
     <!-- Bootstrap -->
     <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -33,7 +33,7 @@
             <section class="login_content">
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
-                    <h1>Login Form</h1>
+                    <h1>Ingreso</h1>
                     <div>
                         <input type="text" class="form-control @error('email') is-invalid @enderror" name="email"  placeholder="Username" required="" />
                         @error('email')
@@ -54,16 +54,16 @@
                     <div class="clearfix"></div>
 
                     <div class="separator">
-                        <p class="change_link">New to site?
-                            <a href=""> Create Account </a>
-                        </p>
+{{--                        <p class="change_link">New to site?--}}
+{{--                            <a href=""> Create Account </a>--}}
+{{--                        </p>--}}
 
                         <div class="clearfix"></div>
                         <br />
 
                         <div>
-                            <h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>
-                            <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+                            <h1><i class="fa fa-paw"></i> Poligeo!</h1>
+                            <p>©<?=date('Y')?> All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
                         </div>
                     </div>
                 </form>

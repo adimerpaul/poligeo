@@ -45,7 +45,7 @@ class UserController extends Controller
             $user = new User;
             $user->name = $request->name;
             $user->email = $request->email;
-            $user->password = encrypt($request->password);
+            $user->password = Hash::make($request->password);
             $user->subcategoria_id = $request->subcategoria_id;
             $user->tipo = $request->tipo;
             $user->estado = 'ACTIVO';
@@ -94,7 +94,7 @@ class UserController extends Controller
         $user=User::find($id);
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = encrypt($request->password);
+//        $user->password = encrypt($request->password);
         $user->subcategoria_id = $request->subcategoria_id;
         $user->tipo = $request->tipo;
         $user->estado = $request->estado;
