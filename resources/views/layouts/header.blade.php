@@ -45,7 +45,7 @@
                 <!-- menu profile quick info -->
                 <div class="profile clearfix">
                     <div class="profile_pic">
-                        <img src="images/img.jpg" alt="..." class="img-circle profile_img">
+                        <img src="{{Auth::user()->archivo}}" alt="..." class="img-circle profile_img">
                     </div>
                     <div class="profile_info">
                         <span>Welcome,</span>
@@ -69,8 +69,8 @@
                             </li>
                             <li><a><i class="fa fa-edit"></i> Plan polcial <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="form.html">General Form</a></li>
-                                    <li><a href="form_advanced.html">Advanced Components</a></li>
+                                    <li><a href="{{route('verplan')}}">Plan </a></li>
+                                    <li><a href="{{route('verdepartamento')}}">Departamento</a></li>
                                     <li><a href="form_validation.html">Form Validation</a></li>
                                     <li><a href="form_wizards.html">Form Wizard</a></li>
                                     <li><a href="form_upload.html">Form Upload</a></li>
@@ -147,7 +147,7 @@
                     <ul class=" navbar-right">
                         <li class="nav-item dropdown open" style="padding-left: 15px;">
                             <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
-                                <img src="images/img.jpg" alt="">{{ Auth::user()->name }}
+                                <img src="{{Auth::user()->archivo}}" alt="">{{ Auth::user()->name }}
                             </a>
                             <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item"  href="javascript:;"> Profile</a>

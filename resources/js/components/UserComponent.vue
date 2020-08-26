@@ -59,35 +59,21 @@
                                                     <div class="modal-body">
                                                         <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" @submit.prevent="guardar">
                                                             <div class="item form-group">
-                                                                <label  class="col-form-label col-md-3 col-sm-3 label-align" for="name">Nombre<span class="required">*</span>
+                                                                <label  class="col-form-label col-md-1 col-sm-1 label-align" for="name">Nombre<span class="required">*</span>
                                                                 </label>
-                                                                <div class="col-md-6 col-sm-6 ">
+                                                                <div class="col-md-5 col-sm-5 ">
                                                                     <input v-model="user.name" type="text" id="name" required="required" placeholder="Nombre" name="name" class="form-control ">
                                                                 </div>
-                                                            </div>
-                                                            <div class="item form-group">
-                                                                <label class="col-form-label col-md-3 col-sm-3 label-align" for="email">Gmail<span class="required">*</span>
+                                                                <label class="col-form-label col-md-1 col-sm-1 label-align" for="email">Gmail<span class="required">*</span>
                                                                 </label>
-                                                                <div class="col-md-6 col-sm-6 ">
+                                                                <div class="col-md-5 col-sm-5 ">
                                                                     <input v-model="user.email" type="email" id="email" required="required" placeholder="Gmail" name="email" class="form-control ">
                                                                 </div>
                                                             </div>
                                                             <div class="item form-group">
-                                                                <label class="col-form-label col-md-3 col-sm-3 label-align" for="tipo">Tipo User<span class="required">*</span>
+                                                                <label class="col-form-label col-md-1 col-sm-1 label-align" for="categoria">Categoria<span class="required">*</span>
                                                                 </label>
-                                                                <div class="col-md-6 col-sm-6 ">
-                                                                    <select v-model="user.tipo" id="tipo" required="required" name="tipo" class="form-control">
-                                                                        <option value="">Seleccionar..</option>
-                                                                        <option value="ADMINISTRADOR">ADMINISTRADOR</option>
-                                                                        <option value="GERENTE">GERENTE</option>
-                                                                        <option value="POLICIAL">POLICIAL</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="item form-group">
-                                                                <label class="col-form-label col-md-3 col-sm-3 label-align" for="categoria">Categoria<span class="required">*</span>
-                                                                </label>
-                                                                <div class="col-md-6 col-sm-6 ">
+                                                                <div class="col-md-5 col-sm-5 ">
                                                                     <select @change="subcat($event)"  v-model="categoria" id="categoria" required="required" name="categoria" class="form-control">
                                                                         <option value="">Seleccionar..</option>
                                                                         <option v-for="item in categorias" v-bind:value="item.id">
@@ -95,11 +81,9 @@
                                                                         </option>
                                                                     </select>
                                                                 </div>
-                                                            </div>
-                                                            <div class="item form-group">
-                                                                <label class="col-form-label col-md-3 col-sm-3 label-align" for="subcategoria">Sub categoria<span class="required">*</span>
+                                                                <label class="col-form-label col-md-1 col-sm-1 label-align" for="subcategoria">Sub categoria<span class="required">*</span>
                                                                 </label>
-                                                                <div class="col-md-6 col-sm-6 ">
+                                                                <div class="col-md-5 col-sm-5 ">
                                                                     <select v-model="user.subcategoria_id" id="subcategoria" required="required" name="categoria" class="form-control">
                                                                         <option v-for="item in subcategorias" v-bind:value="item.id">
                                                                             {{item.nombre}}
@@ -108,20 +92,33 @@
                                                                 </div>
                                                             </div>
                                                             <div class="item form-group">
-                                                                <label  class="col-form-label col-md-3 col-sm-3 label-align" for="password">Password<span class="required">*</span>
+                                                                <label  class="col-form-label col-md-1 col-sm-1 label-align" for="password">Password<span class="required">*</span>
                                                                 </label>
-                                                                <div class="col-md-6 col-sm-6 ">
+                                                                <div class="col-md-5 col-sm-5 ">
                                                                     <input v-model="user.password" autocomplete="off" type="password" id="password" required="required" placeholder="Password" name="password" class="form-control" minlength="5">
                                                                 </div>
-                                                            </div>
-                                                            <div class="item form-group">
-                                                                <label  class="col-form-label col-md-3 col-sm-3 label-align" for="password2">Confirm password<span class="required">*</span>
+                                                                <label  class="col-form-label col-md-1 col-sm-1 label-align" for="password2">Confirm password<span class="required">*</span>
                                                                 </label>
-                                                                <div class="col-md-6 col-sm-6 ">
+                                                                <div class="col-md-5 col-sm-5 ">
                                                                     <input v-model="password2" type="password" id="password2" autocomplete="off" required="required" placeholder="Confirm password" name="password2" class="form-control" minlength="5">
                                                                     <span class="badge badge-danger " v-show="!registrar"> las contraseñas no coinciden</span>
                                                                     <span hidden>{{registrar=user.password==password2}}</span>
                                                                 </div>
+                                                            </div>
+                                                            <div class="item form-group">
+                                                                <label class="col-form-label col-md-1 col-sm-1 label-align" for="tipo">Tipo User<span class="required">*</span>
+                                                                </label>
+                                                                <div class="col-md-5 col-sm-5 ">
+                                                                    <select v-model="user.tipo" id="tipo" required="required" name="tipo" class="form-control">
+                                                                        <option value="">Seleccionar..</option>
+                                                                        <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                                                                        <option value="GERENTE">GERENTE</option>
+                                                                        <option value="POLICIAL">POLICIAL</option>
+                                                                    </select>
+                                                                </div>
+                                                                <label class="col-form-label col-md-1 col-sm-1 label-align" for="imagen">Fotografia<span class="required">*</span>
+                                                                </label>
+                                                                <input type="file" name="image" @change="getImage" id="imagen" accept="image/*" required>
                                                             </div>
 
                                                             <div class="modal-footer">
@@ -280,6 +277,7 @@
                                     <span hidden>{{registrar2=user3.password==password22}}</span>
                                 </div>
                             </div>
+
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-trash"></i> Cancelar</button>
                                 <button type="submit" :disabled="!registrar2" class="btn btn-warning" ><i class="fa fa-key"></i> Modificar</button>
@@ -320,6 +318,7 @@
                 password2:'',
                 password22:'',
                 t:'',
+                imagen : null,
 
             }
         },
@@ -333,6 +332,10 @@
             });
         },
         methods: {
+            getImage(event){
+                //Asignamos la imagen a  nuestra data
+                this.imagen = event.target.files[0];
+            },
             datos(){
                 this.users=[];
                 axios.get('/user').then(res=>{
@@ -379,8 +382,17 @@
             {
                 // console.log(this.user);
                 var cm=this;
-                axios.post('./user',this.user).then(res=>{
+                var data = new  FormData();
+                data.append('image', this.imagen);
+                data.append('name', this.user.name);
+                data.append('email', this.user.email);
+                data.append('password', this.user.password);
+                data.append('subcategoria_id', this.user.subcategoria_id);
+                data.append('tipo', this.user.tipo);
+                axios.post('./user',data).then(res=>{
                     // console.log(res);
+
+                    console.log(res.data);
                     if(res.data=="0"){
                         cm.$toastr.e("Error al crear usuario","porfavor contacte con el administrador");
                     }else{
@@ -388,6 +400,7 @@
                         this.datos();
                         cm.$toastr.s("Creado correctamente!!!");
                     }
+
                     // console.log(res.data);
                     // this.users.push(res.data);
                     // t.row.add( [

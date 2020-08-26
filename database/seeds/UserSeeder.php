@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'adimer',
             'email' => 'adimer101@gmail.com',
+            'archivo' => 'images/users/1.jpg',
             'password' => Hash::make('123456789'),
             'subcategoria_id'=>'1'
         ]);

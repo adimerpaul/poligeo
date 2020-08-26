@@ -16,6 +16,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/verplan', function () {
+    return view('plan');
+})->name('verplan')->middleware('auth');
+Route::get('/verdepartamento', function () {
+    return view('departamento');
+})->name('verdepartamento')->middleware('auth');
 
 Auth::routes();
 
@@ -29,3 +35,5 @@ Route::resource('/categoria', 'CategoriaController')->middleware('auth');
 Route::resource('/subcategoria', 'SubcategoriaController')->middleware('auth');
 Route::apiResource('/tiponotificaciones', 'TiponotificacionesController')->middleware('auth');
 Route::apiResource('/notificaciones', 'NotificacionesController')->middleware('auth');
+Route::apiResource('/plan', 'PlanController')->middleware('auth');
+Route::apiResource('/departamento', 'DepartamentoController')->middleware('auth');

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Subcategoria;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+
 class UserController extends Controller
 {
     /**
@@ -15,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::with('subcategoria')->get();
+        return User::with('subcategoria')->get()->where('id','!=',Auth::user()->id)->where('id','!=',1);
     }
 
     /**
@@ -41,6 +43,7 @@ class UserController extends Controller
 //        var_dump($request);
 //        $request->password=encrypt('a');
 //        return User::create($request->all());
+
         try {
             $user = new User;
             $user->name = $request->name;
@@ -48,14 +51,22 @@ class UserController extends Controller
             $user->password = Hash::make($request->password);
             $user->subcategoria_id = $request->subcategoria_id;
             $user->tipo = $request->tipo;
+//            return $request->tipo;
             $user->estado = 'ACTIVO';
+
+//            $imageName = time().'.'.$request->image->getClientOriginalExtension();
+//            $archivo=$request->image->move(public_path('/images/users'));
+            $file=$request->file('image')->store('images/users');
+            $user->archivo=$file;
             $user->save();
             $user->subcategoria=Subcategoria::find($request->subcategoria_id);
             return $user;
+
         }catch (\Illuminate\Database\QueryException $e){
             //tu código
             return 0;
         }
+
 
 
     }

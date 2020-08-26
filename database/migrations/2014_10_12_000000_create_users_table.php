@@ -19,8 +19,9 @@ class CreateUsersTable extends Migration
             $table->string('email',150)->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('archivo')->default('');
             $table->enum('estado',array('ACTIVO','INACTIVO'))->default('ACTIVO');
-            $table->enum('tipo',array('POLICIA','GERENTE','ADMINISTRADOR'))->default('ADMINISTRADOR')->nullable();
+            $table->enum('tipo',array('POLICIAL','GERENTE','ADMINISTRADOR'))->default('ADMINISTRADOR')->nullable();
             $table->unsignedBigInteger('subcategoria_id')->nullable();
             $table->foreign('subcategoria_id')->references('id')->on('subcategorias');
             $table->rememberToken();

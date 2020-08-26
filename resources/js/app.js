@@ -25,6 +25,9 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 Vue.component('user-component', require('./components/UserComponent').default);
 Vue.component('tiponotificacion', require('./components/TiponotificacionComponent').default);
 Vue.component('notificacion', require('./components/NotificacionComponent').default);
+Vue.component('menu-component', require('./components/MainComponent').default);
+Vue.component('plan-component', require('./components/PlanComponent').default);
+Vue.component('departamento-component', require('./components/DepartamentoComponent').default);
 import $ from 'jquery';
 const app = new Vue({
     el: '#app',
