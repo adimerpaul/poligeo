@@ -71,7 +71,7 @@
                                 <ul class="nav child_menu">
                                     <li><a href="{{route('verplan')}}">Plan </a></li>
                                     <li><a href="{{route('verdepartamento')}}">Departamento</a></li>
-                                    <li><a href="form_validation.html">Form Validation</a></li>
+                                    <li><a href="{{route('verplanpolicial')}}">Plan Policial</a></li>
                                     <li><a href="form_wizards.html">Form Wizard</a></li>
                                     <li><a href="form_upload.html">Form Upload</a></li>
                                     <li><a href="form_buttons.html">Form Buttons</a></li>

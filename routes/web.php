@@ -19,9 +19,14 @@ Route::get('/', function () {
 Route::get('/verplan', function () {
     return view('plan');
 })->name('verplan')->middleware('auth');
+
 Route::get('/verdepartamento', function () {
     return view('departamento');
 })->name('verdepartamento')->middleware('auth');
+
+Route::get('/verplanpolicial', function () {
+    return view('planpolicial');
+})->name('verplanpolicial')->middleware('auth');
 
 Auth::routes();
 
@@ -37,3 +42,5 @@ Route::apiResource('/tiponotificaciones', 'TiponotificacionesController')->middl
 Route::apiResource('/notificaciones', 'NotificacionesController')->middleware('auth');
 Route::apiResource('/plan', 'PlanController')->middleware('auth');
 Route::apiResource('/departamento', 'DepartamentoController')->middleware('auth');
+Route::apiResource('/policeplan', 'PoliceplanController')->middleware('auth');
+Route::apiResource('/policesplan', 'PolicesplanController')->middleware('auth');
