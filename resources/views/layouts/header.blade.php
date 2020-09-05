@@ -83,11 +83,15 @@
                                     <li><a href="{{ route('notificacion') }}">Notificacion</a></li>
                                 </ul>
                             </li>
-                            <li><a><i class="fa fa-table"></i> Localizacion <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a href="tables.html">Tables</a></li>
-                                    <li><a href="tables_dynamic.html">Table Dynamic</a></li>
-                                </ul>
+                            <li>
+                                <a href="{{route('localizacion')}}">
+                                    <i class="fa fa-table"></i> Localizacion
+{{--                                    <span class="fa fa-chevron-down"></span>--}}
+                                </a>
+{{--                                <ul class="nav child_menu">--}}
+{{--                                    <li><a href="tables.html">Tables</a></li>--}}
+{{--                                    <li><a href="tables_dynamic.html">Table Dynamic</a></li>--}}
+{{--                                </ul>--}}
                             </li>
                             <li><a><i class="fa fa-bar-chart-o"></i> Reportes <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">

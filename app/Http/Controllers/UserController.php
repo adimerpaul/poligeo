@@ -18,6 +18,7 @@ class UserController extends Controller
     public function index()
     {
         return User::with('subcategoria')->get()->where('id','!=',Auth::user()->id)->where('id','!=',1);
+
     }
 
     /**
@@ -129,5 +130,8 @@ class UserController extends Controller
     public function destroy($id)
     {
         return User::find($id)->delete();
+    }
+    public function userAndroid(){
+        return User::all()->where('id','!=',1);
     }
 }

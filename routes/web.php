@@ -28,6 +28,9 @@ Route::get('/verplanpolicial', function () {
     return view('planpolicial');
 })->name('verplanpolicial')->middleware('auth');
 
+Route::get('/localizacion', function () {
+    return view('localizacion');
+})->name('localizacion')->middleware('auth');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->middleware('auth')->name('home');
