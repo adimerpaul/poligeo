@@ -242,9 +242,10 @@ export default {
                                 axios.post('/policesplan',{user_id:r.code,policeplan_id:res.data.id}).then(res=>{
                                     // console.log(res);
                                     this.verdatos();
-                                    cm.$toastr.s("Creado correctamente!!!");
                                 });
                             })
+                            cm.$toastr.s("Creado correctamente!!!");
+                            $('.bs-example-modal-lg').modal('hide');
 
                         });
                     }

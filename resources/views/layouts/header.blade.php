@@ -72,9 +72,9 @@
                                     <li><a href="{{route('verplan')}}">Plan </a></li>
                                     <li><a href="{{route('verdepartamento')}}">Departamento</a></li>
                                     <li><a href="{{route('verplanpolicial')}}">Plan Policial</a></li>
-                                    <li><a href="form_wizards.html">Form Wizard</a></li>
-                                    <li><a href="form_upload.html">Form Upload</a></li>
-                                    <li><a href="form_buttons.html">Form Buttons</a></li>
+{{--                                    <li><a href="form_wizards.html">Form Wizard</a></li>--}}
+{{--                                    <li><a href="form_upload.html">Form Upload</a></li>--}}
+{{--                                    <li><a href="form_buttons.html">Form Buttons</a></li>--}}
                                 </ul>
                             </li>
                             <li><a><i class="fa fa-desktop"></i> Notificaciones <span class="fa fa-chevron-down"></span></a>
@@ -160,7 +160,7 @@
                                     <span>Settings</span>
                                 </a>
                                 <a class="dropdown-item"  href="javascript:;">Help</a>
-                                <a class="dropdown-item"  href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="fa fa-sign-out pull-right"></i> {{ __('Logout') }}</a>
+                                <a class="dropdown-item"  href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="fa fa-sign-out pull-right"></i> Salir</a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>

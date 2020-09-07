@@ -3508,10 +3508,10 @@ __webpack_require__.r(__webpack_exports__);
               }).then(function (res) {
                 // console.log(res);
                 _this3.verdatos();
-
-                cm.$toastr.s("Creado correctamente!!!");
               });
             });
+            cm.$toastr.s("Creado correctamente!!!");
+            $('.bs-example-modal-lg').modal('hide');
           });
         }
       });
