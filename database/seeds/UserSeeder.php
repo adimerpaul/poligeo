@@ -22,10 +22,11 @@ class UserSeeder extends Seeder
             'subcategoria_id'=>'1'
         ]);
         DB::table('users')->insert([
-            'name' => 'admin',
+            'name' => 'gerente',
             'email' => 'gerente@gmail.com',
             'archivo' => 'images/users/1.jpg',
-            'password' => Hash::make('123456789'),
+            'password' => Hash::make('123456'),
+            'tipo'=>'GERENTE',
             'subcategoria_id'=>'1'
         ]);
         DB::table('users')->insert([

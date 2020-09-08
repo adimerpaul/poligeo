@@ -17,4 +17,24 @@ class SubcategoriaController extends Controller
 //        return Subcategoria::with('categoria')->get();
 
     }
+
+    public function store(Request $request)
+    {
+        $de=new Subcategoria();
+        $de->nombre=$request->nombre;
+        $de->categoria_id=$request->categoria_id;
+        $de->save();
+    }
+    public function update(Request $request, $id)
+    {
+        $de=Subcategoria::find($id);
+        $de->nombre=$request->nombre;
+        $de->categoria_id=$request->categoria_id;
+        $de->save();
+    }
+    public function destroy($id)
+    {
+        $de=Subcategoria::find($id);
+        $de->delete();
+    }
 }

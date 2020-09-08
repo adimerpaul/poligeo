@@ -60,12 +60,16 @@
                 <!-- sidebar menu -->
                 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                     <div class="menu_section">
-                        <h3>General</h3>
+                        <h3> {{Auth::user()->tipo}}</h3>
                         <ul class="nav side-menu">
-                            <li><a><i class="fa fa-home"></i> Personal <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a href="{{ route('indexuser') }}">Usuarios</a></li>
-                                </ul>
+                            @if(Auth::user()->tipo=='ADMINISTRADOR')
+                            <li><a href="{{ route('indexuser') }}">
+                                    <i class="fa fa-home"></i> Personal
+{{--                                    <span class="fa fa-chevron-down"></span>--}}
+                                </a>
+{{--                                <ul class="nav child_menu">--}}
+{{--                                    <li><a href="{{ route('indexuser') }}">Usuarios </a></li>--}}
+{{--                                </ul>--}}
                             </li>
                             <li><a><i class="fa fa-edit"></i> Plan polcial <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
@@ -77,6 +81,20 @@
 {{--                                    <li><a href="form_buttons.html">Form Buttons</a></li>--}}
                                 </ul>
                             </li>
+                            @endif
+                            @if(Auth::user()->tipo=='GERENTE')
+                            <li><a><i class="fa fa-home"></i> Rangos <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a href="{{ route('vercategoria') }}">Categorias </a></li>
+                                    <li><a href="{{ route('versubcategoria') }}">SubCategorias </a></li>
+                                </ul>
+                            </li>
+                            <li><a><i class="fa fa-fax"></i> Memorandums <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a href="{{ route('indexuser') }}">Usuarios </a></li>
+                                </ul>
+                            </li>
+                            @endif
                             <li><a><i class="fa fa-desktop"></i> Notificaciones <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li><a href="{{ route('tiponotificacion') }}">Tipo Notificacion</a></li>

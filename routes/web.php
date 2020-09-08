@@ -24,6 +24,14 @@ Route::get('/verdepartamento', function () {
     return view('departamento');
 })->name('verdepartamento')->middleware('auth');
 
+Route::get('/vercategoria', function () {
+    return view('categoria');
+})->name('vercategoria')->middleware('auth');
+
+Route::get('/versubcategoria', function () {
+    return view('subcategoria');
+})->name('versubcategoria')->middleware('auth');
+
 Route::get('/verplanpolicial', function () {
     return view('planpolicial');
 })->name('verplanpolicial')->middleware('auth');

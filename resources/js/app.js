@@ -35,6 +35,8 @@ Vue.component('notificacion', require('./components/NotificacionComponent').defa
 Vue.component('menu-component', require('./components/MainComponent').default);
 Vue.component('plan-component', require('./components/PlanComponent').default);
 Vue.component('departamento-component', require('./components/DepartamentoComponent').default);
+Vue.component('categoria-component', require('./components/CategoriaComponent').default);
+Vue.component('subcategoria-component', require('./components/subcategoriaComponent').default);
 import $ from 'jquery';
 const app = new Vue({
     el: '#app',
