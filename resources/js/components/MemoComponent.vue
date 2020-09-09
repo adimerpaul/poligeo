@@ -3,7 +3,7 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Subcategorias <small> Subcategorias</small></h3>
+                    <h3>Categorias <small> Categorias</small></h3>
                 </div>
 
                 <div class="title_right">
@@ -22,7 +22,7 @@
                 <div class="col-md-12 col-sm-12 ">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2>Controlar  <small>Sub categorias</small></h2>
+                            <h2>Controlar  <small>Tipos de categorias</small></h2>
                             <ul class="nav navbar-right panel_toolbox">
                                 <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                 </li>
@@ -43,15 +43,15 @@
                                 <div class="col-sm-12">
                                     <div class="card-box table-responsive">
                                         <p class="text-muted font-13 m-b-30">
-                                            Esta funcion permitira la creacion modificacion  de Subcategorias del sistemas <code>Control de Subcategorias</code>
+                                            Esta funcion permitira la creacion modificacion  de categorias del sistemas <code>Control de categorias</code>
                                         </p>
                                         <!-- Large modal -->
-                                        <button type="button" class="btn btn-success" data-toggle="modal" @click.prevent="crear" data-target=".bs-example-modal-lg"><i class="fa fa-plus"></i> Crear  Subcategoria</button>
+                                        <button type="button" class="btn btn-success" data-toggle="modal" @click.prevent="crear" data-target=".bs-example-modal-lg"><i class="fa fa-plus"></i> Crear  categorias</button>
                                         <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
                                             <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title" id="myModalLabel">Crear Subcategoria</h4>
+                                                        <h4 class="modal-title" id="myModalLabel">Crear tipo de categorias</h4>
                                                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                                                         </button>
                                                     </div>
@@ -62,17 +62,6 @@
                                                                 </label>
                                                                 <div class="col-md-6 col-sm-6 ">
                                                                     <input v-model="noti.nombre" type="text" id="titulo" required="required" placeholder="Nombre" name="titulo" class="form-control ">
-                                                                </div>
-                                                            </div>
-                                                            <div class="item form-group">
-                                                                <label  class="col-form-label col-md-3 col-sm-3 label-align" for="categoria">Categoria<span class="required">*</span>
-                                                                </label>
-                                                                <div class="col-md-6 col-sm-6 ">
-                                                                    <!--                                                                    <input v-model="noti.nombre" type="text" id="categoria" required="required" placeholder="Nombre" name="categoria" class="form-control ">-->
-                                                                    <select name="categoria" v-model="noti.categoria_id" id="categoria" required class="form-control">
-                                                                        <option value="">Selecionar..</option>
-                                                                        <option v-for="item in categorias" v-bind:value="item.id">{{item.nombre}}</option>
-                                                                    </select>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
@@ -91,7 +80,7 @@
                                             <tr>
                                                 <th>Id</th>
                                                 <th>Nombre</th>
-                                                <th>Categoria</th>
+
                                                 <th>Opciones</th>
                                             </tr>
                                             </thead>
@@ -100,7 +89,6 @@
                                             <tr v-for="(item,index) in notificaciones" :key="index">
                                                 <td>{{index+1}}</td>
                                                 <td>{{item.nombre}}</td>
-                                                <td>{{item.categoria.nombre}}</td>
                                                 <td>
                                                     <button class="btn btn-sm btn-warning"@click="modificar(item)"> <i class="fa fa-pencil"></i> </button>
                                                     <button class="btn btn-sm btn-danger" @click="eliminar(item.id,index)"> <i class="fa fa-trash"></i> </button>
@@ -123,99 +111,98 @@
 
 <script>
 
-    export default {
-        beforeMount(){
-        },
-        mounted() {
+export default {
+    beforeMount(){
+    },
+    mounted() {
 
+    },
+    data(){
+        return {
+            noti:{},
+            notificaciones:[],
+            tipo:[],
+            nuevo:true
+        }
+    },
+    created() {
+        this.datos();
+        // axios.get('/tiponotificaciones').then(res=>{
+        //     // console.log(res);
+        //     this.tipo=res.data;
+        // })
+        // console.log(this.tiponotificaiones);
+    },
+
+    methods:{
+        crear(){
+            this.nuevo=true;
+            this.noti={};
         },
-        data(){
-            return {
-                noti:{},
-                notificaciones:[],
-                tipo:[],
-                nuevo:true,
-                categorias:[]
-            }
-        },
-        created() {
-            this.datos();
+        datos(){
             axios.get('/categoria').then(res=>{
                 // console.log(res);
-                this.categorias=res.data;
+                this.notificaciones=res.data;
             })
-            // console.log(this.tiponotificaiones);
         },
-
-        methods:{
-            crear(){
-                this.nuevo=true;
-                this.noti={};
-            },
-            datos(){
-                axios.get('/subcategoria').then(res=>{
-                    console.log(res.data);
-                    this.notificaciones=res.data;
-                })
-            },
-            guardar(){
-                let cm = this;
-                if(this.nuevo){
-                    axios.post('/subcategoria',this.noti).then(res=>{
-                        // console.log(res);
-                        // this.tiponotificaiones=res.data;
-                        $('.bs-example-modal-lg').modal('hide');
-                        this.datos();
-                        cm.$toastr.s("Creado correctamente!!!");
-                        this.noti={}
-                    })
-                }else{
-                    axios.put('/subcategoria/'+this.noti.id,this.noti).then(res=>{
-                        // console.log(res);
-                        // this.tiponotificaiones=res.data;
-                        $('.bs-example-modal-lg').modal('hide');
-                        this.datos();
-                        cm.$toastr.s("Modificado correctamente!!!");
-                        this.tipo={}
-                    })
-                }
-
-            },
-            eliminar(id){
-                var cm=this;
-                this.$fire({
-                    title: "Eliminar?",
-                    text:"Seguro de eliminar?",
-                    // text: "text",
-                    type: "question",
-                    timer: 3000,
-                    showCloseButton: true,
-                    showCancelButton: true,
-                }).then(r => {
-                    // console.log(r.value);
-                    if(r.value){
-                        axios.delete('/subcategoria/'+id).then(res=>{
-                            // console.log(res);
-                            this.datos();
-                            cm.$toastr.s("Borrado correctamente!!!");
-                        });
-                    }
-                });
-            },
-            modificar(item){
-                // console.log('aa');
-                this.noti=item;
-                // console.log(this.noti);
-                $('.bs-example-modal-lg').modal('show');
-                this.nuevo=false;
-            },
-            cambio(id){
-                axios.get('/categoria/'+id).then(res=>{
+        guardar(){
+            let cm = this;
+            if(this.nuevo){
+                axios.post('/categoria',this.noti).then(res=>{
                     // console.log(res);
-                    // this.notificaciones=res.data;
+                    // this.tiponotificaiones=res.data;
+                    $('.bs-example-modal-lg').modal('hide');
                     this.datos();
+                    cm.$toastr.s("Creado correctamente!!!");
+                    this.noti={}
+                })
+            }else{
+                axios.put('/categoria/'+this.noti.id,this.noti).then(res=>{
+                    // console.log(res);
+                    // this.tiponotificaiones=res.data;
+                    $('.bs-example-modal-lg').modal('hide');
+                    this.datos();
+                    cm.$toastr.s("Modificado correctamente!!!");
+                    this.tipo={}
                 })
             }
+
+        },
+        eliminar(id){
+            var cm=this;
+            this.$fire({
+                title: "Eliminar?",
+                text:"Seguro de eliminar?",
+                // text: "text",
+                type: "question",
+                timer: 3000,
+                showCloseButton: true,
+                showCancelButton: true,
+            }).then(r => {
+                // console.log(r.value);
+                if(r.value){
+                    axios.delete('/categoria/'+id).then(res=>{
+                        // console.log(res);
+                        this.datos();
+                        cm.$toastr.s("Borrado correctamente!!!");
+                    });
+                }
+            });
+        },
+        modificar(item){
+            // console.log('aa');
+            this.noti=item;
+            // console.log(this.noti);
+            $('.bs-example-modal-lg').modal('show');
+            this.nuevo=false;
+        },
+        cambio(id){
+            axios.get('/categoria/'+id).then(res=>{
+                // console.log(res);
+                // this.notificaciones=res.data;
+                this.datos();
+            })
         }
     }
+}
 </script>

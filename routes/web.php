@@ -36,6 +36,14 @@ Route::get('/verplanpolicial', function () {
     return view('planpolicial');
 })->name('verplanpolicial')->middleware('auth');
 
+Route::get('/vermemo', function () {
+    return view('memo');
+})->name('vermemo')->middleware('auth');
+
+Route::get('/vertipomemo', function () {
+    return view('tipomemo');
+})->name('vertipomemo')->middleware('auth');
+
 Route::get('/localizacion', function () {
     return view('localizacion');
 })->name('localizacion')->middleware('auth');

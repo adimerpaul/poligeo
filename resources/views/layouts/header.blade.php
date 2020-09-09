@@ -91,7 +91,8 @@
                             </li>
                             <li><a><i class="fa fa-fax"></i> Memorandums <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="{{ route('indexuser') }}">Usuarios </a></li>
+                                    <li><a href="{{ route('vermemo') }}">Memorandums </a></li>
+                                    <li><a href="{{ route('vertipomemo') }}">Tipo memorandums </a></li>
                                 </ul>
                             </li>
                             @endif

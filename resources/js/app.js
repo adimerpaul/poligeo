@@ -37,6 +37,8 @@ Vue.component('plan-component', require('./components/PlanComponent').default);
 Vue.component('departamento-component', require('./components/DepartamentoComponent').default);
 Vue.component('categoria-component', require('./components/CategoriaComponent').default);
 Vue.component('subcategoria-component', require('./components/subcategoriaComponent').default);
+Vue.component('memo-component', require('./components/MemoComponent').default);
+Vue.component('tipomemo-component', require('./components/TipomemoComponent').default);
 import $ from 'jquery';
 const app = new Vue({
     el: '#app',

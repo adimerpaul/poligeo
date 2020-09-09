@@ -43,15 +43,15 @@
                                 <div class="col-sm-12">
                                     <div class="card-box table-responsive">
                                         <p class="text-muted font-13 m-b-30">
-                                            Esta funcion permitira la creacion modificacion  de categorias del sistemas <code>Control de notificaiones</code>
+                                            Esta funcion permitira la creacion modificacion  de categorias del sistemas <code>Control de categorias</code>
                                         </p>
                                         <!-- Large modal -->
-                                        <button type="button" class="btn btn-success" data-toggle="modal" @click.prevent="crear" data-target=".bs-example-modal-lg"><i class="fa fa-plus"></i> Crear  notificacion</button>
+                                        <button type="button" class="btn btn-success" data-toggle="modal" @click.prevent="crear" data-target=".bs-example-modal-lg"><i class="fa fa-plus"></i> Crear  categorias</button>
                                         <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
                                             <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title" id="myModalLabel">Crear tipo de notificacion</h4>
+                                                        <h4 class="modal-title" id="myModalLabel">Crear tipo de categorias</h4>
                                                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                                                         </button>
                                                     </div>
