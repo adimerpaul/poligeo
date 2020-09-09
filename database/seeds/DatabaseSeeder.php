@@ -18,5 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call(NotificacionesSeeder::class);
         $this->call(PlanSeeder::class);
         $this->call(DepartamentoSeeder::class);
+        $this->call(MemoSeeder::class);
+        $this->call(TipomemoSeeder::class);
     }
 }

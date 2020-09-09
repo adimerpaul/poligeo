@@ -14,7 +14,7 @@ class MemoController extends Controller
      */
     public function index()
     {
-        //
+        return Memo::all();
     }
 
     /**
@@ -35,7 +35,10 @@ class MemoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $m=new Memo();
+        $m->nombre=$request->nombre;
+        $m->abreviado=$request->abreviado;
+        $m->save();
     }
 
     /**
@@ -67,9 +70,12 @@ class MemoController extends Controller
      * @param  \App\Memo  $memo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Memo $memo)
+    public function update(Request $request, $id)
     {
-        //
+        $m=Memo::find($id);
+        $m->nombre=$request->nombre;
+        $m->abreviado=$request->abreviado;
+        $m->save();
     }
 
     /**
@@ -78,8 +84,9 @@ class MemoController extends Controller
      * @param  \App\Memo  $memo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Memo $memo)
+    public function destroy($id)
     {
-        //
+        $m=Memo::find($id);
+        $m->delete();
     }
 }
