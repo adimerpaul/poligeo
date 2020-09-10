@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Poli Geo! | </title>
+    <title>Poli Geo!</title>
 
     <!-- Bootstrap -->
     <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -62,6 +62,14 @@
                     <div class="menu_section">
                         <h3> {{Auth::user()->tipo}}</h3>
                         <ul class="nav side-menu">
+                            @if(Auth::user()->tipo=='ADMINISTRADOR'  || Auth::user()->tipo=='GERENTE')
+                                <li><a><i class="fa fa-desktop"></i> Notificaciones <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="{{ route('tiponotificacion') }}">Tipo Notificacion</a></li>
+                                        <li><a href="{{ route('notificacion') }}">Notificacion</a></li>
+                                    </ul>
+                                </li>
+                            @endif
                             @if(Auth::user()->tipo=='ADMINISTRADOR')
                             <li><a href="{{ route('indexuser') }}">
                                     <i class="fa fa-home"></i> Personal
@@ -96,12 +104,7 @@
                                 </ul>
                             </li>
                             @endif
-                            <li><a><i class="fa fa-desktop"></i> Notificaciones <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a href="{{ route('tiponotificacion') }}">Tipo Notificacion</a></li>
-                                    <li><a href="{{ route('notificacion') }}">Notificacion</a></li>
-                                </ul>
-                            </li>
+
                             <li>
                                 <a href="{{route('localizacion')}}">
                                     <i class="fa fa-table"></i> Localizacion
@@ -112,28 +115,39 @@
 {{--                                    <li><a href="tables_dynamic.html">Table Dynamic</a></li>--}}
 {{--                                </ul>--}}
                             </li>
-                            <li><a><i class="fa fa-bar-chart-o"></i> Reportes <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a href="chartjs.html">Chart JS</a></li>
-                                    <li><a href="chartjs2.html">Chart JS2</a></li>
-                                    <li><a href="morisjs.html">Moris JS</a></li>
-                                    <li><a href="echarts.html">ECharts</a></li>
-                                    <li><a href="other_charts.html">Other Charts</a></li>
-                                </ul>
-                            </li>
+
+                            @if(Auth::user()->tipo=='ADMINISTRADOR'  || Auth::user()->tipo=='GERENTE')
+                                <li><a><i class="fa fa-bar-chart-o"></i> Reportes <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="{{route('rplanespoliciales')}}">Planes policiales</a></li>
+                                        <li><a href="{{route('rcategorias')}}">Categorias policiales</a></li>
+                                        <li><a href="{{route('rsubcategorias')}}">Subcategorias policiales</a></li>
+                                        <li><a href="{{route('rusuarios')}}">Usuarios</a></li>
+                                        <li><a href="{{route('rtiponotificaciones')}}">tipo notificaciones</a></li>
+                                        <li><a href="{{route('rnotificaciones')}}">Notificaiones</a></li>
+                                        <li><a href="{{route('rplanes')}}">Plan</a></li>
+                                        <li><a href="{{route('rdepartamentos')}}">Departamentos</a></li>
+                                        <li><a href="{{route('rmemos')}}">Memorandums</a></li>
+                                        <li><a href="{{route('rtipomemos')}}">tipo memorandums</a></li>
+                                    </ul>
+                                </li>
+                            @endif
+
                         </ul>
                     </div>
                     <div class="menu_section">
                         <h3>Live On</h3>
                         <ul class="nav side-menu">
-                            <li><a><i class="fa fa-bug"></i> Informar bug <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a href="e_commerce.html">E-commerce</a></li>
-                                    <li><a href="projects.html">Projects</a></li>
-                                    <li><a href="project_detail.html">Project Detail</a></li>
-                                    <li><a href="contacts.html">Contacts</a></li>
-                                    <li><a href="profile.html">Profile</a></li>
-                                </ul>
+                            <li><a><i class="fa fa-bug"></i> Informar bug
+{{--                                    <span class="fa fa-chevron-down"></span>--}}
+                                </a>
+{{--                                <ul class="nav child_menu">--}}
+{{--                                    <li><a href="e_commerce.html">E-commerce</a></li>--}}
+{{--                                    <li><a href="projects.html">Projects</a></li>--}}
+{{--                                    <li><a href="project_detail.html">Project Detail</a></li>--}}
+{{--                                    <li><a href="contacts.html">Contacts</a></li>--}}
+{{--                                    <li><a href="profile.html">Profile</a></li>--}}
+{{--                                </ul>--}}
                             </li>
                         </ul>
                     </div>
