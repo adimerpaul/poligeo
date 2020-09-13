@@ -27,6 +27,7 @@
         "luxon": "^1.25.0",
         "vue-datetime": "^1.0.0-beta.14",
         "vue-multiselect": "^2.1.6",
+        "vue-router": "^3.4.3",
         "vue-simple-alert": "^1.1.1",
         "vue-toastr": "^2.1.2",
         "weekstart": "^1.0.1"

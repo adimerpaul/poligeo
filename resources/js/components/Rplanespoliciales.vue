@@ -3,7 +3,7 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Memorandums <small> TipoMemorandums</small></h3>
+                    <h3>Notificaciones <small> notificaciones</small></h3>
                 </div>
 
                 <div class="title_right">
@@ -22,7 +22,7 @@
                 <div class="col-md-12 col-sm-12 ">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2>Controlar  <small>Tipo Memorandums</small></h2>
+                            <h2>Controlar  <small>Tipos de notificaciones</small></h2>
                             <ul class="nav navbar-right panel_toolbox">
                                 <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                 </li>
@@ -43,15 +43,15 @@
                                 <div class="col-sm-12">
                                     <div class="card-box table-responsive">
                                         <p class="text-muted font-13 m-b-30">
-                                            Esta funcion permitira la creacion modificacion  de momorandums del sistemas <code>Control de tipo memorandums</code>
+                                            Esta funcion permitira la creacion modificacion  de notificaciones del sistemas <code>Control de notificaciones</code>
                                         </p>
                                         <!-- Large modal -->
-                                        <button type="button" class="btn btn-success" data-toggle="modal" @click.prevent="crear" data-target=".bs-example-modal-lg"><i class="fa fa-plus"></i> Crear  memorandums</button>
+                                        <button type="button" class="btn btn-success" data-toggle="modal" @click.prevent="crear" data-target=".bs-example-modal-lg"><i class="fa fa-plus"></i> Crear  notificacion</button>
                                         <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
                                             <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title" id="myModalLabel">Crear tipo memorandums</h4>
+                                                        <h4 class="modal-title" id="myModalLabel">Crear tipo de notificacion</h4>
                                                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                                                         </button>
                                                     </div>
@@ -62,17 +62,6 @@
                                                                 </label>
                                                                 <div class="col-md-6 col-sm-6 ">
                                                                     <input v-model="noti.nombre" type="text" id="titulo" required="required" placeholder="Nombre" name="titulo" class="form-control ">
-                                                                </div>
-                                                            </div>
-                                                            <div class="item form-group">
-                                                                <label  class="col-form-label col-md-3 col-sm-3 label-align" for="memo">Memo<span class="required">*</span>
-                                                                </label>
-                                                                <div class="col-md-6 col-sm-6 ">
-<!--                                                                    <input v-model="noti.abreviado" type="text" id="abreviado" required="required" placeholder="Abreviado" name="abreviado" class="form-control ">-->
-                                                                    <select name="memo" id="memo" class="form-control" required v-model="noti.memo_id">
-                                                                        <option value="">Selecionar...</option>
-                                                                        <option v-for="item in memos" v-bind:value="item.id">{{item.nombre}}</option>
-                                                                    </select>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
@@ -91,8 +80,7 @@
                                             <tr>
                                                 <th>Id</th>
                                                 <th>Nombre</th>
-                                                <th>Memo</th>
-                                                <th>Estado</th>
+
                                                 <th>Opciones</th>
                                             </tr>
                                             </thead>
@@ -101,11 +89,8 @@
                                             <tr v-for="(item,index) in notificaciones" :key="index">
                                                 <td>{{index+1}}</td>
                                                 <td>{{item.nombre}}</td>
-                                                <td>{{item.memo.nombre}}</td>
-                                                <td>{{item.estado}}</td>
                                                 <td>
                                                     <button class="btn btn-sm btn-warning"@click="modificar(item)"> <i class="fa fa-pencil"></i> </button>
-                                                    <button class="btn btn-sm btn-info"@click="cambio(item.id)"> <i class="fa fa-eye"></i> </button>
                                                     <button class="btn btn-sm btn-danger" @click="eliminar(item.id,index)"> <i class="fa fa-trash"></i> </button>
                                                 </td>
                                             </tr>
@@ -137,16 +122,15 @@ export default {
             noti:{},
             notificaciones:[],
             tipo:[],
-            nuevo:true,
-            memos:[],
+            nuevo:true
         }
     },
     created() {
         this.datos();
-        axios.get('/memo').then(res=>{
-            // console.log(res);
-            this.memos=res.data;
-        })
+        // axios.get('/tiponotificaciones').then(res=>{
+        //     // console.log(res);
+        //     this.tipo=res.data;
+        // })
         // console.log(this.tiponotificaiones);
     },
 
@@ -156,15 +140,15 @@ export default {
             this.noti={};
         },
         datos(){
-            axios.get('/tipomemo').then(res=>{
-                console.log(res.data);
+            axios.get('/plan').then(res=>{
+                // console.log(res);
                 this.notificaciones=res.data;
             })
         },
         guardar(){
             let cm = this;
             if(this.nuevo){
-                axios.post('/tipomemo',this.noti).then(res=>{
+                axios.post('/plan',this.noti).then(res=>{
                     // console.log(res);
                     // this.tiponotificaiones=res.data;
                     $('.bs-example-modal-lg').modal('hide');
@@ -173,7 +157,7 @@ export default {
                     this.noti={}
                 })
             }else{
-                axios.put('/tipomemo/'+this.noti.id,this.noti).then(res=>{
+                axios.put('/plan/'+this.noti.id,this.noti).then(res=>{
                     // console.log(res);
                     // this.tiponotificaiones=res.data;
                     $('.bs-example-modal-lg').modal('hide');
@@ -197,7 +181,7 @@ export default {
             }).then(r => {
                 // console.log(r.value);
                 if(r.value){
-                    axios.delete('/tipomemo/'+id).then(res=>{
+                    axios.delete('/plan/'+id).then(res=>{
                         // console.log(res);
                         this.datos();
                         cm.$toastr.s("Borrado correctamente!!!");
@@ -213,8 +197,8 @@ export default {
             this.nuevo=false;
         },
         cambio(id){
-            axios.get('/tipomemo/'+id).then(res=>{
-                // console.log(res.data);
+            axios.get('/notificaciones/'+id).then(res=>{
+                // console.log(res);
                 // this.notificaciones=res.data;
                 this.datos();
             })

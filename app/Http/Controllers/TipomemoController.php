@@ -14,7 +14,7 @@ class TipomemoController extends Controller
      */
     public function index()
     {
-        //
+        return Tipomemo::with('memo')->get();
     }
 
     /**
@@ -35,7 +35,10 @@ class TipomemoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $t=new Tipomemo();
+        $t->nombre=$request->nombre;
+        $t->memo_id=$request->memo_id;
+        $t->save();
     }
 
     /**
@@ -44,9 +47,15 @@ class TipomemoController extends Controller
      * @param  \App\Tipomemo  $tipomemo
      * @return \Illuminate\Http\Response
      */
-    public function show(Tipomemo $tipomemo)
+    public function show($id)
     {
-        //
+        $t=Tipomemo::find($id);
+        if ($t->estado=="MOSTRAR")
+            $t->estado="OCULTO";
+        else
+            $t->estado="MOSTRAR";
+//        $t->memo_id=$request->memo_id;
+        $t->save();
     }
 
     /**
@@ -67,9 +76,12 @@ class TipomemoController extends Controller
      * @param  \App\Tipomemo  $tipomemo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tipomemo $tipomemo)
+    public function update(Request $request, $id)
     {
-        //
+        $t=Tipomemo::find($id);
+        $t->nombre=$request->nombre;
+        $t->memo_id=$request->memo_id;
+        $t->save();
     }
 
     /**
@@ -78,8 +90,9 @@ class TipomemoController extends Controller
      * @param  \App\Tipomemo  $tipomemo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tipomemo $tipomemo)
+    public function destroy($id)
     {
-        //
+        $t=Tipomemo::find($id);
+        $t->delete();
     }
 }

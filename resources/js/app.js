@@ -39,6 +39,19 @@ Vue.component('categoria-component', require('./components/CategoriaComponent').
 Vue.component('subcategoria-component', require('./components/subcategoriaComponent').default);
 Vue.component('memo-component', require('./components/MemoComponent').default);
 Vue.component('tipomemo-component', require('./components/TipomemoComponent').default);
+
+
+Vue.component('rcategorias', require('./components/Rcategorias').default);
+Vue.component('rdepartamentos', require('./components/Rdepartamentos').default);
+Vue.component('rmemos', require('./components/Rmemos').default);
+Vue.component('rnotificaiones', require('./components/Rnotificaciones').default);
+Vue.component('rplanes', require('./components/Rplanes').default);
+Vue.component('rplanespoliciales', require('./components/Rplanespoliciales').default);
+Vue.component('rsubcategorias', require('./components/Rsubcategorias').default);
+Vue.component('rtiponotificaiones', require('./components/Rtiponotificaciones').default);
+Vue.component('rusuarios', require('./components/Rusuarios').default);
+Vue.component('rtipomemos', require('./components/Rtipomemos').default);
+
 import $ from 'jquery';
 const app = new Vue({
     el: '#app',

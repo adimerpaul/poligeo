@@ -47,9 +47,15 @@ class MemoController extends Controller
      * @param  \App\Memo  $memo
      * @return \Illuminate\Http\Response
      */
-    public function show(Memo $memo)
+    public function show($id)
     {
-        //
+        $m=Memo::find($id);
+        if ($m->estado=='MOSTRAR')
+            $m->estado="OCULTO";
+        else
+            $m->estado="MOSTRAR";
+        $m->save();
+        return $m;
     }
 
     /**
@@ -58,9 +64,9 @@ class MemoController extends Controller
      * @param  \App\Memo  $memo
      * @return \Illuminate\Http\Response
      */
-    public function edit(Memo $memo)
+    public function edit($id)
     {
-        //
+
     }
 
     /**
