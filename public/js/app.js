@@ -5593,7 +5593,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   beforeMount: function beforeMount() {},
   mounted: function mounted() {},
@@ -52390,7 +52389,10 @@ var staticRenderFns = [
         staticClass: "col-form-label col-md-3 col-sm-3 label-align",
         attrs: { for: "tipo" }
       },
-      [_vm._v("Nombre"), _c("span", { staticClass: "required" }, [_vm._v("*")])]
+      [
+        _vm._v("Tipo notificacion"),
+        _c("span", { staticClass: "required" }, [_vm._v("*")])
+      ]
     )
   },
   function() {

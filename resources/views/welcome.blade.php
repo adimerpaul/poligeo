@@ -35,7 +35,7 @@
                     @csrf
                     <h1>Ingreso</h1>
                     <div>
-                        <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{Request::old('email')}}"  placeholder="Username" required="" />
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{Request::old('email')}}"  placeholder="Username" required="" />
                         @error('email')
                         <ul class="parsley-errors-list filled" id="parsley-id-7"><li class="parsley-required">{{$message}}</li></ul>
                         @enderror

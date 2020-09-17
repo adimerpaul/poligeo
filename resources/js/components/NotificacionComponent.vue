@@ -72,7 +72,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="item form-group">
-                                                                <label  class="col-form-label col-md-3 col-sm-3 label-align" for="tipo">Nombre<span class="required">*</span>
+                                                                <label  class="col-form-label col-md-3 col-sm-3 label-align" for="tipo">Tipo notificacion<span class="required">*</span>
                                                                 </label>
                                                                 <div class="col-md-6 col-sm-6 ">
 <!--                                                                    <input v-model="noti.tipo" type="text" id="tipo" required="required" placeholder="Nombre" name="name" class="form-control ">-->
