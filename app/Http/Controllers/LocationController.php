@@ -35,7 +35,12 @@ class LocationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $d=new Location();
+        $d->lat=$request->lat;
+        $d->lng=$request->lng;
+        $d->nombre=$request->nombre;
+        $d->save();
+//        return "aa";
     }
 
     /**

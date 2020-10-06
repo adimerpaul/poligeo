@@ -19,3 +19,10 @@ use Illuminate\Support\Facades\Route;
 //});
 Route::get('/user', 'UserController@userAndroid');
 
+//Route::get('/hola', function () {
+//    return "hola";
+//});
+
+Route::resource('/location','LocationController');
+
+
