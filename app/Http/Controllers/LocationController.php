@@ -40,7 +40,7 @@ class LocationController extends Controller
         $d->lng=$request->lng;
         $d->nombre=$request->nombre;
         $d->save();
-//        return "aa";
+        return $d;
     }
 
     /**
