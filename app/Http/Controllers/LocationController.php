@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Location;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LocationController extends Controller
 {
@@ -14,7 +15,32 @@ class LocationController extends Controller
      */
     public function index()
     {
-        //
+        return DB::table('locations')
+            ->select(DB::raw('nombre'))
+            ->groupBy('nombre')
+            ->get();
+    }
+
+    public function buscar(Request $request)
+    {
+        return DB::table('locations')
+            ->select(DB::raw('nombre'))
+            ->where('created_at','>=',$request->inicio)
+            ->where('created_at','<=',$request->fin)
+            ->groupBy('nombre')
+            ->get();
+//        return $request->inicio;
+    }
+
+    public function puntos(Request $request)
+    {
+        return DB::table('locations')
+            ->where('created_at','>=',$request->f1)
+            ->where('created_at','<=',$request->f2)
+            ->where('nombre','=',$request->nombre)
+//            ->groupBy('nombre')
+            ->get();
+//        return $request->inicio;
     }
 
     /**

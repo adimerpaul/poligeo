@@ -90,6 +90,10 @@ Route::get('/rtipomemos', function () {
     return view('rtipomemos');
 })->name('rtipomemos')->middleware('auth');
 
+Route::get('/verlocation', function () {
+    return view('verlocation');
+})->name('verlocation')->middleware('auth');
+
 
 
 
@@ -111,3 +115,6 @@ Route::apiResource('/policeplan', 'PoliceplanController')->middleware('auth');
 Route::apiResource('/policesplan', 'PolicesplanController')->middleware('auth');
 Route::apiResource('/memo', 'MemoController')->middleware('auth');
 Route::apiResource('/tipomemo', 'TipomemoController')->middleware('auth');
+Route::apiResource('/location', 'LocationController')->middleware('auth');
+Route::post('/buscar', 'LocationController@buscar')->middleware('auth');
+Route::post('/puntos', 'LocationController@puntos')->middleware('auth');

@@ -1,5 +1,55 @@
 <template>
     <div class="right_col" role="main">
+<!--        <div style="height: 500px; width: 100%">-->
+<!--            <div style="height: 200px overflow: auto;">-->
+<!--                <p>First marker is placed at {{ withPopup.lat }}, {{ withPopup.lng }}</p>-->
+<!--                <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>-->
+<!--                <button @click="showLongText">-->
+<!--                    Toggle long popup-->
+<!--                </button>-->
+<!--                <button @click="showMap = !showMap">-->
+<!--                    Toggle map-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <l-map-->
+<!--                v-if="showMap"-->
+<!--                :zoom="zoom"-->
+<!--                :center="center"-->
+<!--                :options="mapOptions"-->
+<!--                style="height: 80%"-->
+<!--                @update:center="centerUpdate"-->
+<!--                @update:zoom="zoomUpdate"-->
+<!--            >-->
+<!--                <l-tile-layer-->
+<!--                    :url="url"-->
+<!--                    :attribution="attribution"-->
+<!--                />-->
+<!--                <l-marker :lat-lng="withPopup">-->
+<!--                    <l-popup>-->
+<!--                        <div @click="innerClick">-->
+<!--                            I am a popup-->
+<!--                            <p v-show="showParagraph">-->
+<!--                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque-->
+<!--                                sed pretium nisl, ut sagittis sapien. Sed vel sollicitudin nisi.-->
+<!--                                Donec finibus semper metus id malesuada.-->
+<!--                            </p>-->
+<!--                        </div>-->
+<!--                    </l-popup>-->
+<!--                </l-marker>-->
+<!--                <l-marker :lat-lng="withTooltip">-->
+<!--                    <l-tooltip :options="{ permanent: true, interactive: true }">-->
+<!--                        <div @click="innerClick">-->
+<!--                            I am a tooltip-->
+<!--                            <p v-show="showParagraph">-->
+<!--                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque-->
+<!--                                sed pretium nisl, ut sagittis sapien. Sed vel sollicitudin nisi.-->
+<!--                                Donec finibus semper metus id malesuada.-->
+<!--                            </p>-->
+<!--                        </div>-->
+<!--                    </l-tooltip>-->
+<!--                </l-marker>-->
+<!--            </l-map>-->
+<!--        </div>-->
         <div class="">
             <div class="page-title">
                 <div class="title_left">
@@ -22,7 +72,7 @@
                 <div class="col-md-12 col-sm-12 ">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2>Controlar  <small>Tipos de notificaciones</small></h2>
+                            <h2>Controlar reporte policial <small>Reporte del personal policial</small></h2>
                             <ul class="nav navbar-right panel_toolbox">
                                 <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                 </li>
@@ -40,63 +90,37 @@
                         </div>
                         <div class="x_content">
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-sm-6">
                                     <div class="card-box table-responsive">
-                                        <p class="text-muted font-13 m-b-30">
-                                            Esta funcion permitira la creacion modificacion  de notificaciones del sistemas <code>Control de notificaciones</code>
-                                        </p>
-                                        <!-- Large modal -->
-                                        <button type="button" class="btn btn-success" data-toggle="modal" @click.prevent="crear" data-target=".bs-example-modal-lg"><i class="fa fa-plus"></i> Crear  notificacion</button>
-                                        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title" id="myModalLabel">Crear tipo de notificacion</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" @submit.prevent="guardar">
-                                                            <div class="item form-group">
-                                                                <label  class="col-form-label col-md-3 col-sm-3 label-align" for="titulo">Nombre<span class="required">*</span>
-                                                                </label>
-                                                                <div class="col-md-6 col-sm-6 ">
-                                                                    <input v-model="noti.nombre" type="text" id="titulo" required="required" placeholder="Nombre" name="titulo" class="form-control ">
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-trash"></i> Cancelar</button>
-                                                                <button type="submit" class="btn btn-success" ><i class="fa fa-plus"></i> Registrar</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Small modal -->
                                         <table id="datatable2" class="table table-striped table-bordered" style="width:100%">
                                             <thead>
                                             <tr>
                                                 <th>Id</th>
-                                                <th>Nombre</th>
-
-                                                <th>Opciones</th>
+                                                <th>Plan</th>
+                                                <th>Inicio</th>
+                                                <th>Fin</th>
+                                                <th>Oficiales</th>
                                             </tr>
                                             </thead>
 
                                             <tbody>
                                             <tr v-for="(item,index) in notificaciones" :key="index">
                                                 <td>{{index+1}}</td>
-                                                <td>{{item.nombre}}</td>
+                                                <td>{{item.plan.nombre}}</td>
+                                                <td>{{item.inicio}}</td>
+                                                <td>{{item.fin}}</td>
                                                 <td>
-                                                    <button class="btn btn-sm btn-warning"@click="modificar(item)"> <i class="fa fa-pencil"></i> </button>
-                                                    <button class="btn btn-sm btn-danger" @click="eliminar(item.id,index)"> <i class="fa fa-trash"></i> </button>
+                                                    <button class="btn btn-sm btn-info"@click="modificar(item)"> <i class="fa fa-eye"></i> </button>
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
                                     </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <template v-if="policiales.length">
+                                        <a   target="_blank" class="btn btn-sm btn-primary"  v-for="i in policiales" v-bind:href="'verlocation?nombre='+i.nombre+'&f1='+f1+'&f2='+f2" > <i class="fa fa-user"></i> {{i.nombre}}  </a>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -111,7 +135,17 @@
 
 <script>
 
+// import { latLng } from "leaflet";
+// import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
+
 export default {
+    // components: {
+    //     LMap,
+    //     LTileLayer,
+    //     LMarker,
+    //     LPopup,
+    //     LTooltip
+    // },
     beforeMount(){
     },
     mounted() {
@@ -122,8 +156,28 @@ export default {
             noti:{},
             notificaciones:[],
             tipo:[],
-            nuevo:true
+            nuevo:true,
+            policiales:[],
+            f1:'',
+            f2:'',
+            // zoom: 13,
+            // center: latLng(47.41322, -1.219482),
+            // url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            // attribution:
+            //     '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+            // withPopup: latLng(47.41322, -1.219482),
+            // withTooltip: latLng(47.41422, -1.250482),
+            // currentZoom: 11.5,
+            // currentCenter: latLng(47.41322, -1.219482),
+            // showParagraph: false,
+            // mapOptions: {
+            //     zoomSnap: 0.5
+            // },
+            // showMap: true
+
         }
+    },
+    mapa(policial){
     },
     created() {
         this.datos();
@@ -135,12 +189,24 @@ export default {
     },
 
     methods:{
+        // zoomUpdate(zoom) {
+        //     this.currentZoom = zoom;
+        // },
+        // centerUpdate(center) {
+        //     this.currentCenter = center;
+        // },
+        // showLongText() {
+        //     this.showParagraph = !this.showParagraph;
+        // },
+        // innerClick() {
+        //     alert("Click!");
+        // },
         crear(){
             this.nuevo=true;
             this.noti={};
         },
         datos(){
-            axios.get('/plan').then(res=>{
+            axios.get('/policeplan').then(res=>{
                 // console.log(res);
                 this.notificaciones=res.data;
             })
@@ -189,12 +255,20 @@ export default {
                 }
             });
         },
-        modificar(item){
+        modificar(i){
             // console.log('aa');
-            this.noti=item;
-            // console.log(this.noti);
-            $('.bs-example-modal-lg').modal('show');
-            this.nuevo=false;
+            // this.noti=item;
+            // // console.log(this.noti);
+            // $('.bs-example-modal-lg').modal('show');
+            // this.nuevo=false;
+            // io(id){
+            this.f1=i.inicio;
+            this.f2=i.fin;
+                axios.post('/buscar/',{inicio:i.inicio,fin:i.fin}).then(res=>{
+                    // console.log(res.data);
+                    this.policiales=res.data;
+                    // this.datos();
+                })
         },
         cambio(id){
             axios.get('/notificaciones/'+id).then(res=>{

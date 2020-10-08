@@ -39,6 +39,7 @@ Vue.component('categoria-component', require('./components/CategoriaComponent').
 Vue.component('subcategoria-component', require('./components/subcategoriaComponent').default);
 Vue.component('memo-component', require('./components/MemoComponent').default);
 Vue.component('tipomemo-component', require('./components/TipomemoComponent').default);
+Vue.component('location', require('./components/location').default);
 
 
 Vue.component('rcategorias', require('./components/Rcategorias').default);

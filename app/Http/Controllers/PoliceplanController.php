@@ -14,7 +14,7 @@ class PoliceplanController extends Controller
      */
     public function index()
     {
-        return Policeplan::all();
+        return Policeplan::with('plan')->with('departamento')->get();
     }
 
     /**
