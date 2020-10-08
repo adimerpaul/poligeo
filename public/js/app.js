@@ -5302,7 +5302,7 @@ __webpack_require__.r(__webpack_exports__);
       // io(id){
       this.f1 = i.inicio;
       this.f2 = i.fin;
-      axios.post('/buscar/', {
+      axios.post('/buscar', {
         inicio: i.inicio,
         fin: i.fin
       }).then(function (res) {

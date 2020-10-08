@@ -264,7 +264,7 @@ export default {
             // io(id){
             this.f1=i.inicio;
             this.f2=i.fin;
-                axios.post('/buscar/',{inicio:i.inicio,fin:i.fin}).then(res=>{
+                axios.post('/buscar',{inicio:i.inicio,fin:i.fin}).then(res=>{
                     // console.log(res.data);
                     this.policiales=res.data;
                     // this.datos();
