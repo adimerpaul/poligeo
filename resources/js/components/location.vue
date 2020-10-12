@@ -55,7 +55,8 @@
 
 <!--            <l-marker v-for="(marker, index) in markers" :key="index" :lat-lng="marker.location" >-->
 <!--                <l-tooltip :options="{ permanent: true, interactive: true }">-->
-<!--                    {{marker.created_at}}-->
+<!--&lt;!&ndash;                    {{marker.id}}&ndash;&gt;-->
+<!--                    {{index}}-->
 <!--                </l-tooltip>-->
 <!--            </l-marker>-->
 
@@ -104,18 +105,33 @@ export default {
                 ];
                 let con=0;
                 let d1=[];
+                let d2=[];
                 let distance;
                 res.data.forEach(r=>{
-                    if (con==0){
-                        d1=[r.lat,r.lng];
-                    }else {
-                        d2=[r.lat,r.lng];
-                        distance = this.getDistance([lat1, lng1], [lat2, lng2]);
-                        console.log(distance);
-                        d1=d2;
-                    }
-                    this.markers.push({location:L.latLng(r.lat,r.lng),created_at:r.created_at})
-                    this.polyline.latlngs.push([r.lat,r.lng]);
+
+                    // if(con<=5000){
+
+                        console.log(con);
+                        if (con==0){
+                            d1=[r.lat,r.lng];
+                        }else {
+                            d2=[r.lat,r.lng];
+                            distance = this.getDistance(d1[0],d1[1], d2[0],d2[1],'K');
+                            console.log(distance);
+                            if (distance<=0.7 && distance>=0.09){
+                                this.markers.push({location:L.latLng(r.lat,r.lng),created_at:r.created_at,id:r.id})
+                                this.polyline.latlngs.push([r.lat,r.lng]);
+                                d1=d2;
+                            }
+
+
+                        }
+
+                    // }
+
+
+                    con++;
+
 
                     // console.log({location:L.latLng(-17.976961,-67.109801),created_at:r.created_at});
                 });
@@ -162,20 +178,39 @@ export default {
         };
     },
     methods: {
-        getDistance(origin, destination) {
+        getDistance(lat1, lon1, lat2, lon2, unit) {
+            if ((lat1 == lat2) && (lon1 == lon2)) {
+                return 0;
+            }
+            else {
+                var radlat1 = Math.PI * lat1/180;
+                var radlat2 = Math.PI * lat2/180;
+                var theta = lon1-lon2;
+                var radtheta = Math.PI * theta/180;
+                var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+                if (dist > 1) {
+                    dist = 1;
+                }
+                dist = Math.acos(dist);
+                dist = dist * 180/Math.PI;
+                dist = dist * 60 * 1.1515;
+                if (unit=="K") { dist = dist * 1.609344 }
+                if (unit=="N") { dist = dist * 0.8684 }
+                return dist;
+            }
     // return distance in meters
-            var lon1 = toRadian(origin[1]),
-                lat1 = toRadian(origin[0]),
-                lon2 = toRadian(destination[1]),
-                lat2 = toRadian(destination[0]);
-
-            var deltaLat = lat2 - lat1;
-            var deltaLon = lon2 - lon1;
-
-            var a = Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLon/2), 2);
-            var c = 2 * Math.asin(Math.sqrt(a));
-            var EARTH_RADIUS = 6371;
-            return c * EARTH_RADIUS * 1000;
+    //         var lon1 = toRadian(origin[1]),
+    //             lat1 = toRadian(origin[0]),
+    //             lon2 = toRadian(destination[1]),
+    //             lat2 = toRadian(destination[0]);
+    //
+    //         var deltaLat = lat2 - lat1;
+    //         var deltaLon = lon2 - lon1;
+    //
+    //         var a = Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLon/2), 2);
+    //         var c = 2 * Math.asin(Math.sqrt(a));
+    //         var EARTH_RADIUS = 6371;
+    //         return c * EARTH_RADIUS * 1000;
         },
         zoomUpdate(zoom) {
             this.currentZoom = zoom;

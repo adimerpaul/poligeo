@@ -7273,6 +7273,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 // import $ from 'jquery'
 
 
@@ -7304,24 +7305,34 @@ __webpack_require__.r(__webpack_exports__);
         ];
         var con = 0;
         var d1 = [];
+        var d2 = [];
         var distance;
         res.data.forEach(function (r) {
+          // if(con<=5000){
+          console.log(con);
+
           if (con == 0) {
             d1 = [r.lat, r.lng];
           } else {
             d2 = [r.lat, r.lng];
-            distance = _this.getDistance([lat1, lng1], [lat2, lng2]);
+            distance = _this.getDistance(d1[0], d1[1], d2[0], d2[1], 'K');
             console.log(distance);
-            d1 = d2;
-          }
 
-          _this.markers.push({
-            location: L.latLng(r.lat, r.lng),
-            created_at: r.created_at
-          });
+            if (distance <= 0.7 && distance >= 0.09) {
+              _this.markers.push({
+                location: L.latLng(r.lat, r.lng),
+                created_at: r.created_at,
+                id: r.id
+              });
 
-          _this.polyline.latlngs.push([r.lat, r.lng]); // console.log({location:L.latLng(-17.976961,-67.109801),created_at:r.created_at});
+              _this.polyline.latlngs.push([r.lat, r.lng]);
 
+              d1 = d2;
+            }
+          } // }
+
+
+          con++; // console.log({location:L.latLng(-17.976961,-67.109801),created_at:r.created_at});
         });
       }); // console.log();
     }
@@ -7359,18 +7370,47 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    getDistance: function getDistance(origin, destination) {
-      // return distance in meters
-      var lon1 = toRadian(origin[1]),
-          lat1 = toRadian(origin[0]),
-          lon2 = toRadian(destination[1]),
-          lat2 = toRadian(destination[0]);
-      var deltaLat = lat2 - lat1;
-      var deltaLon = lon2 - lon1;
-      var a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLon / 2), 2);
-      var c = 2 * Math.asin(Math.sqrt(a));
-      var EARTH_RADIUS = 6371;
-      return c * EARTH_RADIUS * 1000;
+    getDistance: function getDistance(lat1, lon1, lat2, lon2, unit) {
+      if (lat1 == lat2 && lon1 == lon2) {
+        return 0;
+      } else {
+        var radlat1 = Math.PI * lat1 / 180;
+        var radlat2 = Math.PI * lat2 / 180;
+        var theta = lon1 - lon2;
+        var radtheta = Math.PI * theta / 180;
+        var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+
+        if (dist > 1) {
+          dist = 1;
+        }
+
+        dist = Math.acos(dist);
+        dist = dist * 180 / Math.PI;
+        dist = dist * 60 * 1.1515;
+
+        if (unit == "K") {
+          dist = dist * 1.609344;
+        }
+
+        if (unit == "N") {
+          dist = dist * 0.8684;
+        }
+
+        return dist;
+      } // return distance in meters
+      //         var lon1 = toRadian(origin[1]),
+      //             lat1 = toRadian(origin[0]),
+      //             lon2 = toRadian(destination[1]),
+      //             lat2 = toRadian(destination[0]);
+      //
+      //         var deltaLat = lat2 - lat1;
+      //         var deltaLon = lon2 - lon1;
+      //
+      //         var a = Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLon/2), 2);
+      //         var c = 2 * Math.asin(Math.sqrt(a));
+      //         var EARTH_RADIUS = 6371;
+      //         return c * EARTH_RADIUS * 1000;
+
     },
     zoomUpdate: function zoomUpdate(zoom) {
       this.currentZoom = zoom;
@@ -62728,6 +62768,512 @@ if (typeof this !== 'undefined' && this.Sweetalert2){  this.swal = this.sweetAle
 
 /***/ }),
 
+/***/ "./node_modules/time-aware-polyline/dist/time-aware-polyline.es5.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/time-aware-polyline/dist/time-aware-polyline.es5.js ***!
+  \**************************************************************************/
+/*! exports provided: TimeAwareEncoder, EARTH_RADIUS, PolylineUtils, TimeAwareAnimation, CustomEvent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimeAwareEncoder", function() { return TimeAwareEncoder; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EARTH_RADIUS", function() { return EARTH_RADIUS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PolylineUtils", function() { return PolylineUtils; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimeAwareAnimation", function() { return TimeAwareAnimation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CustomEvent", function() { return CustomEvent; });
+var TimeAwareEncoder = /** @class */ (function () {
+    function TimeAwareEncoder() {
+    }
+    TimeAwareEncoder.prototype.encodeTimeAwarePolyline = function (points) {
+        return this.extendTimeAwarePolyline("", points, null);
+    };
+    TimeAwareEncoder.prototype.decodeTimeAwarePolyline = function (polyline) {
+        // Method to decode a time aware encoder and return gpx logs
+        var gpxLogs = [];
+        var index = 0;
+        var lat = 0;
+        var lng = 0;
+        var timeStamp = 0;
+        var polylineLine = polyline.length;
+        while (index < polylineLine) {
+            // Decoding dimensions one by one
+            var latResult = this.getDecodedDimensionFromPolyline(polyline, index);
+            index = latResult[0];
+            var lngResult = this.getDecodedDimensionFromPolyline(polyline, index);
+            index = lngResult[0];
+            var timeResult = this.getDecodedDimensionFromPolyline(polyline, index);
+            index = timeResult[0];
+            // Resultant variables
+            lat += latResult[1];
+            lng += lngResult[1];
+            timeStamp += timeResult[1];
+            gpxLogs.push(this.getGpxLog(lat, lng, timeStamp));
+        }
+        return gpxLogs;
+    };
+    TimeAwareEncoder.prototype.getLocationsAtTimestamps = function (decodedTimeAwarePolyline, timeStamps) {
+        var index = 0, locations = [];
+        for (index = 0; index < timeStamps.length; index++) {
+            var locationsAndBearing = this.getLocationsTillTimeStamp(decodedTimeAwarePolyline, timeStamps[index]);
+            var locationsFound = locationsAndBearing.locations;
+            if (locationsFound.length > 0) {
+                locations.push(locationsFound[locationsFound.length - 1]);
+            }
+            else {
+                locations.push([]);
+            }
+        }
+        return locations;
+    };
+    TimeAwareEncoder.prototype.getLocationsElapsedByTimestamp = function (decodedTimeAwarePolyline, timeStamp) {
+        var locationsAndBearing = this.getLocationsTillTimeStamp(decodedTimeAwarePolyline, timeStamp);
+        return { 'path': locationsAndBearing.locations, 'bearing': locationsAndBearing.bearing };
+    };
+    TimeAwareEncoder.prototype.getPolylineSegmentsPublic = function (decodedTimeAwarePolyline) {
+        var lastTimeStamp = decodedTimeAwarePolyline[decodedTimeAwarePolyline.length - 1][2];
+        var polylineSegments = this.getPolylineSegments(decodedTimeAwarePolyline, lastTimeStamp);
+        var result = [];
+        for (var i = 0; i < polylineSegments.length; i++) {
+            result.push({ 'path': this.removeTimeStamps(polylineSegments[i].segment), 'style': polylineSegments[i].style });
+        }
+        return result;
+    };
+    TimeAwareEncoder.prototype.getPolylineSegmentsForLocationsElapsed = function (decodedTimeAwarePolyline, timeStamp) {
+        var polylineSegments = this.getPolylineSegments(decodedTimeAwarePolyline, timeStamp);
+        var result = [];
+        for (var i = 0; i < polylineSegments.length; i++) {
+            var elapsed = this.getLocationsElapsedByTimestamp(polylineSegments[i].segment, timeStamp);
+            if (elapsed.path.length > 0) {
+                result.push({
+                    'path': elapsed.path, 'bearing': elapsed.bearing, 'style': polylineSegments[i].style
+                });
+            }
+        }
+        return result;
+    };
+    /*
+    Other
+     */
+    TimeAwareEncoder.prototype.getLocationsTillTimeStamp = function (decodedPolyline, timeStamp) {
+        var decoded = decodedPolyline;
+        // decoded and timeStamps are both in order of times
+        var index = 0;
+        var currentPair = [];
+        var locationsElapsed = [];
+        var bearing = 0;
+        if (decoded.length == 0) {
+            return { 'locations': [], 'bearing': bearing };
+        }
+        // remove times before first time
+        var timeStampToFind = timeStamp, startTime = decoded[0][2];
+        while (timeStampToFind <= startTime) {
+            return { 'locations': [[decoded[0][0], decoded[0][1]]], 'bearing': bearing };
+        }
+        for (index = 0; index < decoded.length; index++) {
+            currentPair.push(decoded[index]);
+            if (currentPair.length == 2) {
+                var timeStampToFind = timeStamp;
+                bearing = this.updateBearing(bearing, currentPair);
+                var currentstartTime = currentPair[0][2], endTime = currentPair[1][2];
+                if (timeStampToFind > currentstartTime && timeStampToFind <= endTime) {
+                    // location is in the current pair
+                    var midLocation = this.getLocationInPair(currentPair, timeStampToFind);
+                    locationsElapsed.push(midLocation);
+                    return { 'locations': locationsElapsed, 'bearing': bearing };
+                    // it is possible that the next timestamp is also in the
+                    // same pair, hence redo-ing same iteration
+                    // currentPair.pop();
+                    // index --;
+                }
+                else {
+                    currentPair.shift();
+                }
+            }
+            locationsElapsed.push([currentPair[0][0], currentPair[0][1]]);
+        }
+        return { 'locations': locationsElapsed, 'bearing': bearing };
+    };
+    TimeAwareEncoder.prototype.isDifferentSegment = function (end, start) {
+        // function to determine whether a encoder
+        // segment split should happen
+        var distance = this.getDistance(start, end);
+        return distance > 500;
+    };
+    TimeAwareEncoder.prototype.getPolylineSegments = function (decoded, timeLimit) {
+        // this method breaks encoder till timeStamp when
+        // consecutive time difference is greater than 10 minutes
+        var segments = [], currentSegment = [];
+        var index = 0;
+        if (decoded.length == 0) {
+            return [];
+        }
+        var start = decoded[0];
+        for (index = 0; index < decoded.length; index++) {
+            if (decoded[index][2] <= timeLimit) {
+                if (this.isDifferentSegment(decoded[index], start) && currentSegment.length > 0) {
+                    // time difference is more than 10 mins, so flush
+                    segments.push({
+                        'segment': currentSegment, 'style': 'solid'
+                    });
+                    var lastElement = currentSegment[currentSegment.length - 1];
+                    currentSegment = [lastElement, decoded[index]];
+                    segments.push({
+                        'segment': currentSegment, 'style': 'dotted'
+                    });
+                    currentSegment = [decoded[index]];
+                }
+                else {
+                    currentSegment.push(decoded[index]);
+                }
+                start = decoded[index];
+            }
+            else {
+                // add one more location so that the locations elapsed
+                // method can find an interpolated midpoint
+                if (!this.isDifferentSegment(decoded[index], start)) {
+                    currentSegment.push(decoded[index]);
+                }
+                break;
+            }
+        }
+        segments.push({
+            'segment': currentSegment, 'style': 'solid'
+        });
+        return segments;
+    };
+    TimeAwareEncoder.prototype.updateBearing = function (oldBearing, gpxPair) {
+        var start = [gpxPair[0][0], gpxPair[0][1]];
+        var end = [gpxPair[1][0], gpxPair[1][1]];
+        var newBearing = this.computeHeading(start, end);
+        if (newBearing != 0) {
+            return Math.round(newBearing * 100) / 100.0;
+        }
+        else {
+            return oldBearing;
+        }
+    };
+    TimeAwareEncoder.prototype.getLocationInPair = function (gpxPair, timeStamp) {
+        // timeStamp lies between the timeStamps in the gpx logs
+        var startLat = gpxPair[0][0], startLng = gpxPair[0][1], endLat = gpxPair[1][0], endLng = gpxPair[1][1], startTime = new Date(gpxPair[0][2]), endTime = new Date(gpxPair[1][2]), currentTime = new Date(timeStamp);
+        var ratio = (+startTime - +currentTime) / (+startTime - +endTime);
+        return [startLat * (1 - ratio) + endLat * ratio, startLng * (1 - ratio) + endLng * ratio];
+    };
+    TimeAwareEncoder.prototype.getNextLatLng = function (decoded, timeStamp) {
+        var polylineLength = decoded.length;
+        if (polylineLength > 0) {
+            for (var index = 0; index < polylineLength - 1; index++) {
+                var currentTimeStamp = decoded[index][2];
+                if (timeStamp < currentTimeStamp) {
+                    return [decoded[index][0], decoded[index][1]];
+                }
+            }
+            return [decoded[polylineLength - 1][0], decoded[polylineLength - 1][1]];
+        }
+    };
+    TimeAwareEncoder.prototype.getDistance = function (origin, destination) {
+        // return distance in meters
+        var lon1 = this.toRadian(origin[1]), lat1 = this.toRadian(origin[0]), lon2 = this.toRadian(destination[1]), lat2 = this.toRadian(destination[0]);
+        var deltaLat = lat2 - lat1;
+        var deltaLon = lon2 - lon1;
+        var a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLon / 2), 2);
+        var c = 2 * Math.asin(Math.sqrt(a));
+        return c * EARTH_RADIUS * 1000;
+    };
+    TimeAwareEncoder.prototype.toRadian = function (degree) {
+        return degree * Math.PI / 180;
+    };
+    TimeAwareEncoder.prototype.computeHeading = function (start, end) {
+        var lat1 = this.toRadian(start[0]);
+        var lat2 = this.toRadian(end[0]);
+        var lng1 = this.toRadian(start[1]);
+        var lng2 = this.toRadian(end[1]);
+        return Math.atan2(Math.sin(lng2 - lng1) * Math.cos(lat2), Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1)) * 180 / Math.PI;
+    };
+    TimeAwareEncoder.prototype.areEqualLatlngs = function (latlngA, latlngB) {
+        return (latlngA[0] == latlngB[0]) && (latlngA[1] == latlngB[1]);
+    };
+    TimeAwareEncoder.prototype.removeTimeStamps = function (segment) {
+        var result = [];
+        for (var i = 0; i < segment.length; i++) {
+            result.push([segment[i][0], segment[i][1]]);
+        }
+        return result;
+    };
+    /*
+    Helpers
+     */
+    TimeAwareEncoder.prototype.getDecodedDimensionFromPolyline = function (polyline, index) {
+        // Method to decode one dimension of the encoder
+        var result = 1;
+        var shift = 0;
+        while (true) {
+            var polylineChar = polyline[index];
+            var b = polylineChar.charCodeAt(0) - 63 - 1;
+            index++;
+            result += this.lshiftOperator(b, shift);
+            shift += 5;
+            if (b < 0x1f) {
+                break;
+            }
+        }
+        if ((result % 2) !== 0) {
+            return [index, this.rshiftOperator(this.notOperator(result), 1)];
+        }
+        else {
+            return [index, this.rshiftOperator(result, 1)];
+        }
+    };
+    TimeAwareEncoder.prototype.extendTimeAwarePolyline = function (polyline, points, lastPoint) {
+        var lastLat = 0, lastLng = 0, lastTimeStamp = 0;
+        if (polyline == null) {
+            polyline = '';
+        }
+        if (lastPoint != null) {
+            lastLat = this.getLat(lastPoint);
+            lastLng = this.getLng(lastPoint);
+            lastTimeStamp = this.getTimeStamp(lastPoint);
+        }
+        if (points.length < 1) {
+            return polyline;
+        }
+        for (var i = 0; i < points.length; i++) {
+            var currentGpxLog = points[i];
+            var lat = this.getLat(currentGpxLog);
+            var lng = this.getLng(currentGpxLog);
+            var timeStamp = this.getTimeStamp(currentGpxLog);
+            var diffArray = [lat - lastLat, lng - lastLng, timeStamp - lastTimeStamp];
+            for (var j = 0; j < diffArray.length; j++) {
+                var currentDiff = diffArray[j];
+                currentDiff = (currentDiff < 0) ? this.notOperator(this.lshiftOperator(currentDiff, 1)) : this.lshiftOperator(currentDiff, 1);
+                while (currentDiff >= 0x20) {
+                    polyline += String.fromCharCode((0x20 | (currentDiff & 0x1f)) + 63);
+                    currentDiff = this.rshiftOperator(currentDiff, 5);
+                }
+                polyline += String.fromCharCode(currentDiff + 63);
+            }
+            lastLat = lat, lastLng = lng, lastTimeStamp = timeStamp;
+        }
+        return polyline;
+    };
+    TimeAwareEncoder.prototype.getCoordinate = function (intRepresentation) {
+        var coordinate = intRepresentation * 0.00001;
+        return +coordinate.toFixed(5);
+    };
+    TimeAwareEncoder.prototype.getIsoTime = function (timeStamp) {
+        // timeStamp is in seconds
+        return new Date(timeStamp * 1000).toISOString();
+    };
+    TimeAwareEncoder.prototype.getGpxLog = function (lat, lng, timeStamp) {
+        return [
+            this.getCoordinate(lat), this.getCoordinate(lng), this.getIsoTime(timeStamp)
+        ];
+    };
+    TimeAwareEncoder.prototype.getLat = function (gpxLog) {
+        return Math.round(gpxLog[0] * 100000);
+    };
+    TimeAwareEncoder.prototype.getLng = function (gpxLog) {
+        return Math.round(gpxLog[1] * 100000);
+    };
+    TimeAwareEncoder.prototype.getTimeStamp = function (gpxLog) {
+        return +new Date(gpxLog[2]) / 1000;
+    };
+    TimeAwareEncoder.prototype.lshiftOperator = function (num, bits) {
+        // Custom left shift for 64 bit integers
+        return num * Math.pow(2, bits);
+    };
+    TimeAwareEncoder.prototype.rshiftOperator = function (num, bits) {
+        // Custom right shift for 64 bit integers
+        return Math.floor(num / Math.pow(2, bits));
+    };
+    TimeAwareEncoder.prototype.notOperator = function (num) {
+        // Custom not operator for 64 bit integers
+        return ~num;
+    };
+    return TimeAwareEncoder;
+}());
+
+var EARTH_RADIUS = 6371;
+
+var PolylineUtils = /** @class */ (function () {
+    function PolylineUtils() {
+        this.encoder = new TimeAwareEncoder();
+    }
+    PolylineUtils.prototype.updateTimeAwarePolyline = function (encodedPolyline) {
+        if (this.isNewPolyline(encodedPolyline)) {
+            this.encodedPolyline = encodedPolyline;
+            this.timeAwarePolyline = this.encoder.decodeTimeAwarePolyline(this.encodedPolyline);
+        }
+    };
+    PolylineUtils.prototype.getPolylineToTime = function (timestamp) {
+        return this.encoder.getLocationsElapsedByTimestamp(this.timeAwarePolyline, timestamp);
+    };
+    PolylineUtils.prototype.getLatestTime = function () {
+        if (this.timeAwarePolyline) {
+            var lastI = this.timeAwarePolyline.length - 1;
+            return lastI > -1 ? this.timeAwarePolyline[lastI][2] : null;
+        }
+        else {
+            return null;
+        }
+    };
+    PolylineUtils.prototype.isNewPolyline = function (encodedPolyline) {
+        return encodedPolyline != this.encodedPolyline;
+    };
+    return PolylineUtils;
+}());
+
+var TimeAwareAnimation = /** @class */ (function () {
+    function TimeAwareAnimation() {
+        this.polylineUtils = new PolylineUtils();
+        this.animationSpeed = 20;
+        this.animationProps = { speedScale: 1, interval: 20 };
+        this.updateEvent = new CustomEvent();
+    }
+    /*
+    Update animation from encoded polyline string
+    */
+    TimeAwareAnimation.prototype.updatePolylineString = function (timeAwarePolylineString) {
+        var timeAwarePolyline = this.polylineUtils.encoder.decodeTimeAwarePolyline(timeAwarePolylineString);
+        this.update(timeAwarePolyline);
+    };
+    /*
+    Update animation from encoded time aware array [lat, lng, time]
+     */
+    TimeAwareAnimation.prototype.update = function (timeAwarePolyline) {
+        if (!timeAwarePolyline) {
+            this.clear();
+            return true;
+        }
+        
+        this.polylineUtils.timeAwarePolyline = timeAwarePolyline;
+        if (!this.animationPoll)
+            this.handleAnimation(timeAwarePolyline);
+    };
+    TimeAwareAnimation.prototype.handleAnimation = function (timeAwarePolyline) {
+        var _this = this;
+        if (!timeAwarePolyline)
+            return;
+        if (this.animationPoll)
+            this.clearAnimationPoll();
+        this.updateCurrentTime();
+        this.setPathBearing();
+        this.animationPoll = setInterval(function () {
+            _this.updateCurrentTime();
+            _this.setPathBearing();
+        }, this.animationSpeed);
+    };
+    TimeAwareAnimation.prototype.updateCurrentTime = function () {
+        var _this = this;
+        if (this.currentTime) {
+            var timeToAdd = this.getTimeToAdd();
+            this.currentTime = this.addISOTime(this.currentTime, timeToAdd);
+        }
+        else {
+            var last = this.polylineUtils.getLatestTime();
+            var delay = new Date().getTime() - new Date(last).getTime();
+            var timeToAdd = delay > 15 * 60 * 1000 ? 0 : -20000;
+            this.currentTime = this.addISOTime(last, timeToAdd);
+        }
+        this.capTime(function () {
+            _this.clearAnimationPoll();
+        });
+    };
+    TimeAwareAnimation.prototype.setPathBearing = function () {
+        var _a = this.currentTimePolylineData(), path = _a.path, bearing = _a.bearing;
+        this.updatePathBearing(path, bearing);
+        this.updateEvent.publish('update', { path: path, bearing: bearing, time: this.currentTime });
+    };
+    
+    TimeAwareAnimation.prototype.updatePathBearing = function (path, bearing) {
+    };
+    TimeAwareAnimation.prototype.capTime = function (callback) {
+        if (new Date(this.currentTime) > new Date(this.polylineUtils.getLatestTime())) {
+            this.currentTime = this.polylineUtils.getLatestTime();
+            if (callback && typeof callback == 'function')
+                callback();
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+    TimeAwareAnimation.prototype.clearAnimationPoll = function () {
+        clearInterval(this.animationPoll);
+        this.animationPoll = null;
+    };
+    TimeAwareAnimation.prototype.getTimeToAdd = function () {
+        var lastTime = new Date(this.polylineUtils.getLatestTime()).getTime();
+        var currentTime = new Date(this.currentTime).getTime();
+        var totalDuration = (lastTime - currentTime) / 1000;
+        var factor = 1;
+        if (typeof totalDuration == 'number') {
+            var mid = 5;
+            var power = 2;
+            if (totalDuration > mid) {
+                factor = Math.pow(totalDuration, power) / Math.pow(mid, power);
+            }
+        }
+        return factor * this.animationProps.interval;
+    };
+    TimeAwareAnimation.prototype.currentTimePolylineData = function () {
+        var polylineData = this.polylineUtils.getPolylineToTime(this.currentTime);
+        var path = polylineData.path.map(function (array) {
+            return { lat: array[0], lng: array[1] };
+        });
+        return { path: path, bearing: polylineData.bearing };
+    };
+    TimeAwareAnimation.prototype.clear = function () {
+        this.clearAnimationPoll();
+    };
+    
+    TimeAwareAnimation.prototype.addISOTime = function (time, timeToAdd) {
+        return new Date(new Date(time).getTime() + timeToAdd).toISOString();
+    };
+    
+    return TimeAwareAnimation;
+}());
+var CustomEvent = /** @class */ (function () {
+    function CustomEvent() {
+        this.topics = {};
+        this.hOP = this.topics.hasOwnProperty;
+    }
+    CustomEvent.prototype.publish = function (topic, info) {
+        // If the topic doesn't exist, or there's no listeners in queue, just leave
+        if (!this.hOP.call(this.topics, topic))
+            return;
+        // Cycle through topics queue, fire!
+        this.topics[topic].forEach(function (item) {
+            item(info != undefined ? info : {});
+        });
+    };
+    CustomEvent.prototype.subscribe = function (topic, listener) {
+        // Create the topic's object if not yet created
+        if (!this.hOP.call(this.topics, topic))
+            this.topics[topic] = [];
+        // Add the listener to queue
+        var index = this.topics[topic].push(listener) - 1;
+        // Provide handle back for removal of topic
+        return {
+            unsubscribe: function () {
+                delete this.topics[topic][index];
+            }
+        };
+    };
+    return CustomEvent;
+}());
+
+// export interface IPathBearing {
+//   path: HtPosition[],
+//   bearing: number,
+// }
+
+
+//# sourceMappingURL=time-aware-polyline.es5.js.map
+
+
+/***/ }),
+
 /***/ "./node_modules/timers-browserify/main.js":
 /*!************************************************!*\
   !*** ./node_modules/timers-browserify/main.js ***!
@@ -100364,10 +100910,10 @@ var regionDayMap = {
 /*!*********************************************!*\
   !*** ./node_modules/weekstart/package.json ***!
   \*********************************************/
-/*! exports provided: _args, _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _spec, _where, author, bugs, description, devDependencies, homepage, keywords, license, main, module, name, repository, scripts, types, umd:main, version, default */
+/*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, bugs, bundleDependencies, deprecated, description, devDependencies, homepage, keywords, license, main, module, name, repository, scripts, types, umd:main, version, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"_args\":[[\"weekstart@1.0.1\",\"C:\\\\tesis\\\\poligeo\"]],\"_from\":\"weekstart@1.0.1\",\"_id\":\"weekstart@1.0.1\",\"_inBundle\":false,\"_integrity\":\"sha512-h6B1HSJxg7sZEXqIpDqAtwiDBp3x5y2jY8WYcUSBhLTcTCy7laQzBmamqMuQM5fpvo1pgpma0OCRpE2W8xrA9A==\",\"_location\":\"/weekstart\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"version\",\"registry\":true,\"raw\":\"weekstart@1.0.1\",\"name\":\"weekstart\",\"escapedName\":\"weekstart\",\"rawSpec\":\"1.0.1\",\"saveSpec\":null,\"fetchSpec\":\"1.0.1\"},\"_requiredBy\":[\"/\"],\"_resolved\":\"https://registry.npmjs.org/weekstart/-/weekstart-1.0.1.tgz\",\"_spec\":\"1.0.1\",\"_where\":\"C:\\\\tesis\\\\poligeo\",\"author\":{\"name\":\"Denis Sikuler\"},\"bugs\":{\"url\":\"https://github.com/gamtiq/weekstart/issues\"},\"description\":\"Library to get first day of week.\",\"devDependencies\":{\"@babel/preset-env\":\"7.6.3\",\"eslint\":\"6.5.1\",\"eslint-config-guard\":\"1.0.3\",\"ink-docstrap\":\"1.3.2\",\"jest\":\"24.9.0\",\"jsdoc\":\"3.6.3\",\"microbundle\":\"0.4.4\",\"version-bump-prompt\":\"5.0.5\"},\"homepage\":\"https://github.com/gamtiq/weekstart\",\"keywords\":[\"week\",\"start\",\"first\",\"day\",\"locale\",\"country\",\"region\"],\"license\":\"MIT\",\"main\":\"dist/commonjs/main.js\",\"module\":\"dist/es-module/main.js\",\"name\":\"weekstart\",\"repository\":{\"type\":\"git\",\"url\":\"git://github.com/gamtiq/weekstart.git\"},\"scripts\":{\"all\":\"npm run check-all && npm run doc && npm run build\",\"build\":\"npm run build-umd && npm run build-commonjs && npm run build-esm && npm run build-umd-min\",\"build-commonjs\":\"microbundle build \\\"src/!(*.test).js\\\" --output dist/commonjs --format cjs --strict --no-compress\",\"build-esm\":\"microbundle build \\\"src/!(*.test).js\\\" --output dist/es-module --format es --no-compress\",\"build-umd\":\"microbundle build src/main.js src/full.js --output dist --format umd --strict --no-compress\",\"build-umd-min\":\"microbundle build src/main.js src/full.js --output dist/min --format umd --strict\",\"check\":\"npm run lint && npm test\",\"check-all\":\"npm run lint-all && npm test\",\"doc\":\"jsdoc -c jsdoc-conf.json\",\"lint\":\"eslint --cache --max-warnings 0 \\\"**/*.js\\\"\",\"lint-all\":\"eslint --max-warnings 0 \\\"**/*.js\\\"\",\"lint-all-error\":\"eslint \\\"**/*.js\\\"\",\"lint-error\":\"eslint --cache \\\"**/*.js\\\"\",\"release\":\"bump patch --commit --tag --all --push package.json package-lock.json bower.json component.json\",\"release-major\":\"bump major --commit --tag --all --push package.json package-lock.json bower.json component.json\",\"release-minor\":\"bump minor --commit --tag --all --push package.json package-lock.json bower.json component.json\",\"test\":\"jest\"},\"types\":\"./index.d.ts\",\"umd:main\":\"dist/main.js\",\"version\":\"1.0.1\"}");
+module.exports = JSON.parse("{\"_from\":\"weekstart\",\"_id\":\"weekstart@1.0.1\",\"_inBundle\":false,\"_integrity\":\"sha512-h6B1HSJxg7sZEXqIpDqAtwiDBp3x5y2jY8WYcUSBhLTcTCy7laQzBmamqMuQM5fpvo1pgpma0OCRpE2W8xrA9A==\",\"_location\":\"/weekstart\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"tag\",\"registry\":true,\"raw\":\"weekstart\",\"name\":\"weekstart\",\"escapedName\":\"weekstart\",\"rawSpec\":\"\",\"saveSpec\":null,\"fetchSpec\":\"latest\"},\"_requiredBy\":[\"#USER\",\"/\"],\"_resolved\":\"https://registry.npmjs.org/weekstart/-/weekstart-1.0.1.tgz\",\"_shasum\":\"950970b48e5797e06fc1a762f3d0f013312321e1\",\"_spec\":\"weekstart\",\"_where\":\"C:\\\\laravel\\\\blog2\",\"author\":{\"name\":\"Denis Sikuler\"},\"bugs\":{\"url\":\"https://github.com/gamtiq/weekstart/issues\"},\"bundleDependencies\":false,\"deprecated\":false,\"description\":\"Library to get first day of week.\",\"devDependencies\":{\"@babel/preset-env\":\"7.6.3\",\"eslint\":\"6.5.1\",\"eslint-config-guard\":\"1.0.3\",\"ink-docstrap\":\"1.3.2\",\"jest\":\"24.9.0\",\"jsdoc\":\"3.6.3\",\"microbundle\":\"0.4.4\",\"version-bump-prompt\":\"5.0.5\"},\"homepage\":\"https://github.com/gamtiq/weekstart\",\"keywords\":[\"week\",\"start\",\"first\",\"day\",\"locale\",\"country\",\"region\"],\"license\":\"MIT\",\"main\":\"dist/commonjs/main.js\",\"module\":\"dist/es-module/main.js\",\"name\":\"weekstart\",\"repository\":{\"type\":\"git\",\"url\":\"git://github.com/gamtiq/weekstart.git\"},\"scripts\":{\"all\":\"npm run check-all && npm run doc && npm run build\",\"build\":\"npm run build-umd && npm run build-commonjs && npm run build-esm && npm run build-umd-min\",\"build-commonjs\":\"microbundle build \\\"src/!(*.test).js\\\" --output dist/commonjs --format cjs --strict --no-compress\",\"build-esm\":\"microbundle build \\\"src/!(*.test).js\\\" --output dist/es-module --format es --no-compress\",\"build-umd\":\"microbundle build src/main.js src/full.js --output dist --format umd --strict --no-compress\",\"build-umd-min\":\"microbundle build src/main.js src/full.js --output dist/min --format umd --strict\",\"check\":\"npm run lint && npm test\",\"check-all\":\"npm run lint-all && npm test\",\"doc\":\"jsdoc -c jsdoc-conf.json\",\"lint\":\"eslint --cache --max-warnings 0 \\\"**/*.js\\\"\",\"lint-all\":\"eslint --max-warnings 0 \\\"**/*.js\\\"\",\"lint-all-error\":\"eslint \\\"**/*.js\\\"\",\"lint-error\":\"eslint --cache \\\"**/*.js\\\"\",\"release\":\"bump patch --commit --tag --all --push package.json package-lock.json bower.json component.json\",\"release-major\":\"bump major --commit --tag --all --push package.json package-lock.json bower.json component.json\",\"release-minor\":\"bump minor --commit --tag --all --push package.json package-lock.json bower.json component.json\",\"test\":\"jest\"},\"types\":\"./index.d.ts\",\"umd:main\":\"dist/main.js\",\"version\":\"1.0.1\"}");
 
 /***/ }),
 
@@ -100400,8 +100946,11 @@ Vue.use(vue_simple_alert__WEBPACK_IMPORTED_MODULE_1__["default"]);
  // You need a specific loader for CSS files
 
 
-Vue.use(vue_datetime__WEBPACK_IMPORTED_MODULE_2__["Datetime"]); // const files = require.context('./', true, /\.vue$/i)
+Vue.use(vue_datetime__WEBPACK_IMPORTED_MODULE_2__["Datetime"]);
+
+var polylineUtil = __webpack_require__(/*! time-aware-polyline */ "./node_modules/time-aware-polyline/dist/time-aware-polyline.es5.js"); // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+
 
 Vue.filter('active', function (value) {
   if (value == 'ACTIVO') {
@@ -102094,8 +102643,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\tesis\poligeo\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\tesis\poligeo\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\laravel\blog2\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\laravel\blog2\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

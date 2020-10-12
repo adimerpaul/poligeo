@@ -17,6 +17,9 @@ import 'vue-datetime/dist/vue-datetime.css'
 
 Vue.use(Datetime)
 
+
+var polylineUtil = require('time-aware-polyline');
+
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 Vue.filter('active', function(value) {
