@@ -46,7 +46,7 @@
                                             Esta funcion permitira la creacion modificacion  de notificaciones del sistemas <code>Control de notificaciones</code>
                                         </p>
                                         <!-- Large modal -->
-                                        <button type="button" class="btn btn-success" data-toggle="modal" @click.prevent="crear" data-target=".bs-example-modal-lg"><i class="fa fa-plus"></i> Crear  notificacion</button>
+                                        <button type="button" class="btn btn-success" data-toggle="modal" @click.prevent="crear" data-target=".bs-example-modal-lg"><i class="fa fa-plus"></i> Crear  Plan</button>
                                         <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
                                             <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">

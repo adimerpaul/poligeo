@@ -74,9 +74,15 @@ class PoliceplanController extends Controller
      * @param  \App\Policeplan  $policeplan
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Policeplan $policeplan)
+    public function update(Request $request, $id)
     {
-        //
+        $policeplan=Policeplan::find($id);
+        $policeplan->inicio=$request->inicio;
+        $policeplan->fin=$request->fin;
+        $policeplan->departamento_id=$request->departamento_id;
+        $policeplan->plan_id=$request->plan_id;
+        $policeplan->save();
+        return $policeplan;
     }
 
     /**
@@ -85,8 +91,9 @@ class PoliceplanController extends Controller
      * @param  \App\Policeplan  $policeplan
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Policeplan $policeplan)
+    public function destroy($id)
     {
-        //
+        $policeplan=Policeplan::find($id);
+        $policeplan->delete();
     }
 }

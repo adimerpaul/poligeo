@@ -43,7 +43,7 @@
                                 <div class="col-sm-12">
                                     <div class="card-box table-responsive">
                                         <p class="text-muted font-13 m-b-30">
-                                            Esta funcion permitira la creacion modificacion   <code>Planes policiales</code>
+                                            Esta funcion permitira la creacion modificacion de  <code>Planes policiales</code>
                                         </p>
                                         <!-- Large modal -->
                                         <button type="button" class="btn btn-success" data-toggle="modal" @click.prevent="crear" data-target=".bs-example-modal-lg"><i class="fa fa-plus"></i> Crear  Plan Policial</button>
@@ -62,15 +62,14 @@
                                                                 </label>
                                                                 <div class="col-md-6 col-sm-6 ">
 <!--                                                                    <datetime v-model="date"></datetime>-->
-
-                                                                    <input v-model="dato.inicio" type="datetime-local" id="inicio" required="required" placeholder="Inicio" name="inicio" class="form-control ">
+                                                                    <input v-model="dato.inicio" type="datetime" id="inicio" required="required" placeholder="Inicio" name="inicio" class="form-control ">
                                                                 </div>
                                                             </div>
                                                             <div class="item form-group">
                                                                 <label  class="col-form-label col-md-3 col-sm-3 label-align" for="fin">Fin<span class="required">*</span>
                                                                 </label>
                                                                 <div class="col-md-6 col-sm-6 ">
-                                                                    <input v-model="dato.fin" type="datetime-local" id="fin" required="required" placeholder="Fin" name="fin" class="form-control ">
+                                                                    <input v-model="dato.fin" type="datetime" id="fin" required="required" placeholder="Fin" name="fin" class="form-control ">
                                                                 </div>
                                                             </div>
                                                             <div class="item form-group">
@@ -95,7 +94,7 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            <div class="item form-group">
+                                                            <div class="item form-group" hidden>
                                                                 <label  class="col-form-label col-md-3 col-sm-3 label-align">Policiales<span class="required">*</span>
                                                                 </label>
                                                                 <div class="col-md-6 col-sm-6 ">
@@ -117,19 +116,24 @@
                                             <thead>
                                             <tr>
                                                 <th>Id</th>
+                                                <th>Departamento</th>
+                                                <th>Plan</th>
                                                 <th>Inicio</th>
                                                 <th>Fin</th>
+                                                <th>Opciones</th>
                                             </tr>
                                             </thead>
 
                                             <tbody>
                                             <tr v-for="(item,index) in datos" :key="index">
                                                 <td>{{index+1}}</td>
+                                                <td>{{item.departamento.nombre}}</td>
+                                                <td>{{item.plan.nombre}}</td>
                                                 <td>{{item.inicio}}</td>
+                                                <td>{{item.fin}}</td>
                                                 <td>
-                                                    {{item.fin}}
-<!--                                                    <button class="btn btn-sm btn-warning"@click="modificar(item)"> <i class="fa fa-pencil"></i> </button>-->
-<!--                                                    <button class="btn btn-sm btn-danger" @click="eliminar(item.id,index)"> <i class="fa fa-trash"></i> </button>-->
+                                                    <button class="btn btn-sm btn-warning"@click="modificar(item)"> <i class="fa fa-pencil"></i> </button>
+                                                    <button class="btn btn-sm btn-danger" @click="eliminar(item)"> <i class="fa fa-trash"></i> </button>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -150,6 +154,7 @@
 <script>
 import Multiselect from 'vue-multiselect'
 import { Datetime } from 'vue-datetime';
+import moment from 'moment'
 
 export default {
     components: {
@@ -164,11 +169,12 @@ export default {
     data(){
         return {
             date: '2018-05-12T00:00:00.000Z',
-        dato:{inicio:new Date},
+            dato:{inicio:'01'},
             datos:[],
             departamentos:[],
             plans:[],
             users:[],
+            nuevo:true,
             value: [
                 // { name: 'Javascript', code: 'js' }
             ],
@@ -180,6 +186,7 @@ export default {
         }
     },
     created() {
+
         this.verdatos();
         axios.get('/plan').then(res=>{
             this.plans=res.data;
@@ -198,10 +205,13 @@ export default {
                 this.options.push({ name: item.name, code: item.id });
             });
         });
-        // console.log(this.tiponotificaiones);
+
     },
 
     methods:{
+        moment: function () {
+            return moment();
+        },
         addTag (newTag) {
             const tag = {
                 name: newTag,
@@ -211,20 +221,22 @@ export default {
             this.value.push(tag)
         },
         crear(){
-            // this.nuevo=true;
-            this.dato={};
+            this.nuevo=true;
+            // this.dato={};
+            this.dato={inicio:moment().format('YYYY-MM-DD 00:00:00'),fin:moment().format('YYYY-MM-DD 00:00:00')};
         },
         verdatos(){
             axios.get('/policeplan').then(res=>{
-                // console.log(res);
+                // console.log(res.data);
                 this.datos=res.data;
             })
         },
         guardar(){
+
             var cm=this;
                 this.$fire({
                     title: "Seguro?",
-                    text:"Seguro de crear?",
+                    text: this.nuevo?"Seguro de crear?":"Seguro de modificar",
                     // text: "text",
                     type: "question",
                     timer: 3000,
@@ -233,54 +245,62 @@ export default {
                 }).then(r => {
                     // console.log(r.value);
                     if(r.value){
-                        axios.post('/policeplan',this.dato).then(res=>{
-                            // console.log(res);
-                            // this.datos();
-                            // cm.$toastr.s("Creado correctamente!!!");
+                        if (this.nuevo){
+                            axios.post('/policeplan',this.dato).then(res=>{
+                                // console.log(res);
+                                this.verdatos();
+                                // cm.$toastr.s("Creado correctamente!!!");
 
-                            cm.value.forEach(r=>{
-                                axios.post('/policesplan',{user_id:r.code,policeplan_id:res.data.id}).then(res=>{
-                                    // console.log(res);
-                                    this.verdatos();
-                                });
-                            })
-                            cm.$toastr.s("Creado correctamente!!!");
-                            $('.bs-example-modal-lg').modal('hide');
+                                // cm.value.forEach(r=>{
+                                //     axios.post('/policesplan',{user_id:r.code,policeplan_id:res.data.id}).then(res=>{
+                                //         // console.log(res);
+                                //         this.verdatos();
+                                //     });
+                                // })
+                                cm.$toastr.s("Creado correctamente!!!");
+                                $('.bs-example-modal-lg').modal('hide');
+                            });
+                        }else{
+                            axios.put('/policeplan/'+this.dato.id,this.dato).then(res=>{
+                                this.verdatos();
+                                cm.$toastr.w("Modificado correctamente!!!");
+                                $('.bs-example-modal-lg').modal('hide');
+                            });
 
-                        });
+                        }
                     }
                 });
 
 
         },
-        // eliminar(id){
-        //     var cm=this;
-        //     this.$fire({
-        //         title: "Eliminar?",
-        //         text:"Seguro de eliminar?",
-        //         // text: "text",
-        //         type: "question",
-        //         timer: 3000,
-        //         showCloseButton: true,
-        //         showCancelButton: true,
-        //     }).then(r => {
-        //         // console.log(r.value);
-        //         if(r.value){
-        //             axios.delete('/plan/'+id).then(res=>{
-        //                 // console.log(res);
-        //                 this.datos();
-        //                 cm.$toastr.s("Borrado correctamente!!!");
-        //             });
-        //         }
-        //     });
-        // },
-        // modificar(item){
-        //     // console.log('aa');
-        //     this.noti=item;
-        //     // console.log(this.noti);
-        //     $('.bs-example-modal-lg').modal('show');
-        //     this.nuevo=false;
-        // },
+        eliminar(id){
+            var cm=this;
+            this.$fire({
+                title: "Eliminar?",
+                text:"Seguro de eliminar?",
+                // text: "text",
+                type: "question",
+                timer: 3000,
+                showCloseButton: true,
+                showCancelButton: true,
+            }).then(r => {
+                // console.log(r.value);
+                if(r.value){
+                    axios.delete('/policeplan/'+id.id).then(res=>{
+                        // console.log(res);
+                        this.verdatos();
+                        cm.$toastr.s("Borrado correctamente!!!");
+                    });
+                }
+            });
+        },
+        modificar(item){
+            // console.log('aa');
+            this.dato=item;
+            console.log(this.dato);
+            $('.bs-example-modal-lg').modal('show');
+            this.nuevo=false;
+        },
         // cambio(id){
         //     axios.get('/notificaciones/'+id).then(res=>{
         //         // console.log(res);

@@ -26,6 +26,7 @@
     "dependencies": {
         "leaflet": "^1.7.1",
         "luxon": "^1.25.0",
+        "moment": "^2.29.1",
         "time-aware-polyline": "^0.2.2",
         "vue-datetime": "^1.0.0-beta.14",
         "vue-multiselect": "^2.1.6",
