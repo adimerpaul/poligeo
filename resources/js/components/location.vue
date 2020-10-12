@@ -1,7 +1,12 @@
 <template>
     <div style="height: 100vh; width: 100%">
         <div style="height: 200px overflow: auto;">
-            <p>Personal: {{dato.nombre}} desde: {{dato.f1}} hasta: {{dato.f2}} </p>
+            <p>
+                Personal: {{dato.nombre}} desde: {{dato.f1}} hasta: {{dato.f2}}
+                Distancimax=<input  type="number" v-model="dismax" >
+                Distancimin=<input type="number" v-model="dismin">
+                <button @click="location">Verificar</button>
+            </p>
 <!--            <p>First marker is placed at {{ withPopup.lat }}, {{ withPopup.lng }}</p>-->
 <!--            <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>-->
 <!--            <button @click="showLongText">-->
@@ -78,9 +83,6 @@ import { LMap, LTileLayer, LMarker, LPopup, LTooltip,  LPolyline } from "vue2-le
 export default {
     name: "Example",
     created() {
-
-
-
         let uri = window.location.href.split('?');
         if (uri.length == 2) {
             let vars = uri[1].split('&');
@@ -94,48 +96,9 @@ export default {
             this.dato.nombre=getVars.nombre.replace(/%20/g, " ");
             this.dato.f1=getVars.f1.replace(/%20/g, " ");
             this.dato.f2=getVars.f2.replace(/%20/g, " ");
-            axios.post('/puntos',this.dato).then(res=>{
-                // console.log(res.data);
-                // this.puntos=res.data;
-                this.markers=[];
-                this.polyline.latlngs=[
-                    // [-17.969815, -67.115186],
-                    // [-17.969215, -67.114942],
-                    // [-17.968327, -67.114674]
-                ];
-                let con=0;
-                let d1=[];
-                let d2=[];
-                let distance;
-                res.data.forEach(r=>{
 
-                    // if(con<=5000){
+            this.location();
 
-                        console.log(con);
-                        if (con==0){
-                            d1=[r.lat,r.lng];
-                        }else {
-                            d2=[r.lat,r.lng];
-                            distance = this.getDistance(d1[0],d1[1], d2[0],d2[1],'K');
-                            console.log(distance);
-                            if (distance<=0.7 && distance>=0.09){
-                                this.markers.push({location:L.latLng(r.lat,r.lng),created_at:r.created_at,id:r.id})
-                                this.polyline.latlngs.push([r.lat,r.lng]);
-                                d1=d2;
-                            }
-
-
-                        }
-
-                    // }
-
-
-                    con++;
-
-
-                    // console.log({location:L.latLng(-17.976961,-67.109801),created_at:r.created_at});
-                });
-            });
             // console.log();
         }
 
@@ -150,6 +113,8 @@ export default {
     },
     data() {
         return {
+            dismin:0.09,
+            dismax:0.7,
             polyline: {
                 latlngs: [
                     [-17.969815, -67.115186],
@@ -178,6 +143,38 @@ export default {
         };
     },
     methods: {
+        location(){
+            axios.post('/puntos',this.dato).then(res=>{
+                // console.log(res.data);
+                // this.puntos=res.data;
+                this.markers=[];
+                this.polyline.latlngs=[
+                    // [-17.969815, -67.115186],
+                    // [-17.969215, -67.114942],
+                    // [-17.968327, -67.114674]
+                ];
+                let con=0;
+                let d1=[];
+                let d2=[];
+                let distance;
+                res.data.forEach(r=>{
+                    console.log(con);
+                    if (con==0){
+                        d1=[r.lat,r.lng];
+                    }else {
+                        d2=[r.lat,r.lng];
+                        distance = this.getDistance(d1[0],d1[1], d2[0],d2[1],'K');
+                        console.log(distance);
+                        if (distance<=this.dismax && distance>=this.dismin){
+                            this.markers.push({location:L.latLng(r.lat,r.lng),created_at:r.created_at,id:r.id})
+                            this.polyline.latlngs.push([r.lat,r.lng]);
+                            d1=d2;
+                        }
+                    }
+                    con++;
+                });
+            });
+        },
         getDistance(lat1, lon1, lat2, lon2, unit) {
             if ((lat1 == lat2) && (lon1 == lon2)) {
                 return 0;

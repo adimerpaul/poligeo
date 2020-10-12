@@ -7299,14 +7299,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 // import $ from 'jquery'
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Example",
   created: function created() {
-    var _this = this;
-
     var uri = window.location.href.split('?');
 
     if (uri.length == 2) {
@@ -7320,46 +7323,7 @@ __webpack_require__.r(__webpack_exports__);
       this.dato.nombre = getVars.nombre.replace(/%20/g, " ");
       this.dato.f1 = getVars.f1.replace(/%20/g, " ");
       this.dato.f2 = getVars.f2.replace(/%20/g, " ");
-      axios.post('/puntos', this.dato).then(function (res) {
-        // console.log(res.data);
-        // this.puntos=res.data;
-        _this.markers = [];
-        _this.polyline.latlngs = [// [-17.969815, -67.115186],
-          // [-17.969215, -67.114942],
-          // [-17.968327, -67.114674]
-        ];
-        var con = 0;
-        var d1 = [];
-        var d2 = [];
-        var distance;
-        res.data.forEach(function (r) {
-          // if(con<=5000){
-          console.log(con);
-
-          if (con == 0) {
-            d1 = [r.lat, r.lng];
-          } else {
-            d2 = [r.lat, r.lng];
-            distance = _this.getDistance(d1[0], d1[1], d2[0], d2[1], 'K');
-            console.log(distance);
-
-            if (distance <= 0.7 && distance >= 0.09) {
-              _this.markers.push({
-                location: L.latLng(r.lat, r.lng),
-                created_at: r.created_at,
-                id: r.id
-              });
-
-              _this.polyline.latlngs.push([r.lat, r.lng]);
-
-              d1 = d2;
-            }
-          } // }
-
-
-          con++; // console.log({location:L.latLng(-17.976961,-67.109801),created_at:r.created_at});
-        });
-      }); // console.log();
+      this.location(); // console.log();
     }
   },
   components: {
@@ -7372,6 +7336,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      dismin: 0.09,
+      dismax: 0.7,
       polyline: {
         latlngs: [[-17.969815, -67.115186], [-17.969215, -67.114942], [-17.968327, -67.114674]],
         color: "green"
@@ -7395,6 +7361,48 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    location: function location() {
+      var _this = this;
+
+      axios.post('/puntos', this.dato).then(function (res) {
+        // console.log(res.data);
+        // this.puntos=res.data;
+        _this.markers = [];
+        _this.polyline.latlngs = [// [-17.969815, -67.115186],
+          // [-17.969215, -67.114942],
+          // [-17.968327, -67.114674]
+        ];
+        var con = 0;
+        var d1 = [];
+        var d2 = [];
+        var distance;
+        res.data.forEach(function (r) {
+          console.log(con);
+
+          if (con == 0) {
+            d1 = [r.lat, r.lng];
+          } else {
+            d2 = [r.lat, r.lng];
+            distance = _this.getDistance(d1[0], d1[1], d2[0], d2[1], 'K');
+            console.log(distance);
+
+            if (distance <= _this.dismax && distance >= _this.dismin) {
+              _this.markers.push({
+                location: L.latLng(r.lat, r.lng),
+                created_at: r.created_at,
+                id: r.id
+              });
+
+              _this.polyline.latlngs.push([r.lat, r.lng]);
+
+              d1 = d2;
+            }
+          }
+
+          con++;
+        });
+      });
+    },
     getDistance: function getDistance(lat1, lon1, lat2, lon2, unit) {
       if (lat1 == lat2 && lon1 == lon2) {
         return 0;
@@ -96196,14 +96204,57 @@ var render = function() {
       _c("div", { staticStyle: { height: "200px overflow: auto" } }, [
         _c("p", [
           _vm._v(
-            "Personal: " +
+            "\n                Personal: " +
               _vm._s(_vm.dato.nombre) +
               " desde: " +
               _vm._s(_vm.dato.f1) +
               " hasta: " +
               _vm._s(_vm.dato.f2) +
-              " "
-          )
+              "\n                Distancimax="
+          ),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.dismax,
+                expression: "dismax"
+              }
+            ],
+            attrs: { type: "number" },
+            domProps: { value: _vm.dismax },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.dismax = $event.target.value
+              }
+            }
+          }),
+          _vm._v("\n                Distancimin="),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.dismin,
+                expression: "dismin"
+              }
+            ],
+            attrs: { type: "number" },
+            domProps: { value: _vm.dismin },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.dismin = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("button", { on: { click: _vm.location } }, [_vm._v("Verificar")])
         ])
       ]),
       _vm._v(" "),
